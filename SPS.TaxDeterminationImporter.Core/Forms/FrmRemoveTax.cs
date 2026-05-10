@@ -49,7 +49,7 @@ namespace SPS.TaxDeterminationImporter.Core.Forms
 
             Form.Freeze(true);
             DataTable dt_Remove = Form.DataSources.DataTables.Item("dt_Remove");
-            string sql = String.Format(Scripts.Resource.GetString("Tax_Determination_GetFields"), lineKey, field1, field2, field3, field4, field5);
+            string sql = String.Format(Scripts.Resource.GetString("TaxDetermination_GetFields"), lineKey, field1, field2, field3, field4, field5);
             dt_Remove.ExecuteQuery(sql);
 
             Grid gr_Remove = Form.Items.Item("gr_Remove").Specific as Grid;

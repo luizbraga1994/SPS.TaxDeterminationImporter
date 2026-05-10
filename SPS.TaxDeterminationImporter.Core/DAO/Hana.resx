@@ -184,11 +184,12 @@ AND TCD1."Priority" = {0}</value>
   </data>
   <data name="TaxDetermination_GetDisplayOrder" xml:space="preserve">
     <value>SELECT "DispOrder" FROM TCD2
-WHERE "KeyFld_1_V" = '{0}'
-AND IFNULL("KeyFld_2_V", '') = '{1}'
-AND IFNULL("KeyFld_3_V", '') = '{2}'
-AND IFNULL("KeyFld_4_V", '') = '{3}'
-AND IFNULL("KeyFld_5_V", '') = '{4}'</value>
+WHERE "Tcd1Id" = {0}
+AND "KeyFld_1_V" = '{1}'
+AND IFNULL("KeyFld_2_V", '') = '{2}'
+AND IFNULL("KeyFld_3_V", '') = '{3}'
+AND IFNULL("KeyFld_4_V", '') = '{4}'
+AND IFNULL("KeyFld_5_V", '') = '{5}'</value>
   </data>
   <data name="TaxDetermination_GetFields" xml:space="preserve">
     <value>SELECT
@@ -202,7 +203,8 @@ FROM TCD1
 	INNER JOIN TCD2
 		ON TCD2."Tcd1Id" = TCD1."AbsId"
 WHERE TCD1."TcdId" = 1
-AND TCD1."Priority" = {0}</value>
+AND TCD1."Priority" = {0}
+ORDER BY TCD2."DispOrder"</value>
   </data>
   <data name="TaxDetermination_GetKeyValues" xml:space="preserve">
     <value>SELECT

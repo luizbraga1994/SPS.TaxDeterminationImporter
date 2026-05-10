@@ -168,6 +168,7 @@ AND TCD1.Priority = {0}</value>
 	dbo.FN_TAXCODE_EXPORT(TCD1.KeyFld_2, TCD2.KeyFld_2_V) Value2,
 	dbo.FN_TAXCODE_EXPORT(TCD1.KeyFld_3, TCD2.KeyFld_3_V) Value3,
 	dbo.FN_TAXCODE_EXPORT(TCD1.KeyFld_4, TCD2.KeyFld_4_V) Value4,
+	dbo.FN_TAXCODE_EXPORT(TCD1.KeyFld_5, TCD2.KeyFld_5_V) Value5,
 	TCD3.EfctFrom DateFrom,
 	TCD3.EfctTo	DateTo
 FROM TCD1
@@ -186,7 +187,8 @@ AND TCD1.Priority = {0}</value>
 WHERE KeyFld_1_V = '{0}'
 AND ISNULL(KeyFld_2_V, '') = '{1}'
 AND ISNULL(KeyFld_3_V, '') = '{2}'
-AND ISNULL(KeyFld_4_V, '') = '{3}'</value>
+AND ISNULL(KeyFld_4_V, '') = '{3}'
+AND ISNULL(KeyFld_5_V, '') = '{4}'</value>
   </data>
   <data name="TaxDetermination_GetFields" xml:space="preserve">
     <value>SELECT
@@ -194,7 +196,8 @@ AND ISNULL(KeyFld_4_V, '') = '{3}'</value>
 	[dbo].FN_GET_KEYFIELDDESCRIPTION(TCD1.KeyFld_1, TCD2.KeyFld_1_V) {1},
 	[dbo].FN_GET_KEYFIELDDESCRIPTION(TCD1.KeyFld_2, TCD2.KeyFld_2_V) {2},
 	[dbo].FN_GET_KEYFIELDDESCRIPTION(TCD1.KeyFld_3, TCD2.KeyFld_3_V) {3},
-	[dbo].FN_GET_KEYFIELDDESCRIPTION(TCD1.KeyFld_4, TCD2.KeyFld_4_V) {4}
+	[dbo].FN_GET_KEYFIELDDESCRIPTION(TCD1.KeyFld_4, TCD2.KeyFld_4_V) {4},
+	[dbo].FN_GET_KEYFIELDDESCRIPTION(TCD1.KeyFld_5, TCD2.KeyFld_5_V) {5}
 FROM TCD1
 	INNER JOIN TCD2
 		ON TCD2.Tcd1Id = TCD1.AbsId
@@ -202,12 +205,13 @@ WHERE TCD1.TcdId = 1
 AND TCD1.Priority = {0}</value>
   </data>
   <data name="TaxDetermination_GetKeyValues" xml:space="preserve">
-    <value>SELECT 
-	DispOrder DisplayOrder, 
-	KeyFld_1_V Value1, 
+    <value>SELECT
+	DispOrder DisplayOrder,
+	KeyFld_1_V Value1,
 	ISNULL(KeyFld_2_V, '') Value2,
 	ISNULL(KeyFld_3_V, '') Value3,
-	ISNULL(KeyFld_4_V, '') Value4
+	ISNULL(KeyFld_4_V, '') Value4,
+	ISNULL(KeyFld_5_V, '') Value5
 FROM TCD2
 WHERE Tcd1Id = {0}</value>
   </data>

@@ -170,10 +170,11 @@ namespace SPS.TaxDeterminationImporter.Core.Forms
             string field2 = ((ComboBox)mt_Tax.GetCellSpecific("2002", selectedRow)).Selected.Description;
             string field3 = ((ComboBox)mt_Tax.GetCellSpecific("2003", selectedRow)).Selected.Description;
             string field4 = ((ComboBox)mt_Tax.GetCellSpecific("1320002007", selectedRow)).Selected.Description;
+            string field5 = ((ComboBox)mt_Tax.GetCellSpecific("1320002008", selectedRow)).Selected.Description;
             string description = ((EditText)mt_Tax.GetCellSpecific("2005", selectedRow)).Value;
 
             FrmRemoveTax frmRemoveTax = new FrmRemoveTax();
-            frmRemoveTax.Show(selectedRow, field1, field2, field3, field4, description);
+            frmRemoveTax.Show(selectedRow, field1, field2, field3, field4, field5, description);
         }
     }
 }

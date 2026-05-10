@@ -85,7 +85,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
 
                     if (existingList != null)
                     {
-                        TaxDeterminationModel existingModel = existingList.FirstOrDefault(m => m.Value1 == model.Value1 && m.Value2 == model.Value2 && m.Value3 == model.Value3 && m.Value4 == model.Value4);
+                        TaxDeterminationModel existingModel = existingList.FirstOrDefault(m => m.Value1 == model.Value1 && m.Value2 == model.Value2 && m.Value3 == model.Value3 && m.Value4 == model.Value4 && m.Value5 == model.Value5);
                         if (existingModel != null)
                         {
                             existingOrder = existingModel.DisplayOrder;
@@ -93,7 +93,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                     }
                     else
                     {
-                        existingOrder = Convert.ToInt32(CrudDAO.ExecuteScalar(String.Format(Scripts.Resource.GetString("TaxDetermination_GetDisplayOrder"), model.Value1, model.Value2, model.Value3, model.Value4)));
+                        existingOrder = Convert.ToInt32(CrudDAO.ExecuteScalar(String.Format(Scripts.Resource.GetString("TaxDetermination_GetDisplayOrder"), model.Value1, model.Value2, model.Value3, model.Value4, model.Value5)));
                     }
                     if (existingOrder == 0)
                     {
@@ -104,6 +104,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                         values.Value2 = model.Value2;
                         values.Value3 = model.Value3;
                         values.Value4 = model.Value4;
+                        values.Value5 = model.Value5;
                         values.DispOrder = displayOrder;
                     }
                     else
@@ -231,6 +232,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 dataTable.Columns.Add("Valor2", typeof(string));
                 dataTable.Columns.Add("Valor3", typeof(string));
                 dataTable.Columns.Add("Valor4", typeof(string));
+                dataTable.Columns.Add("Valor5", typeof(string));
                 dataTable.Columns.Add("Efetivo De", typeof(DateTime));
                 dataTable.Columns.Add("Efetivo Ate", typeof(DateTime));
 
@@ -251,6 +253,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                     dataRow["Valor2"] = determination.Value2;
                     dataRow["Valor3"] = determination.Value3;
                     dataRow["Valor4"] = determination.Value4;
+                    dataRow["Valor5"] = determination.Value5;
 
                     dataRow["Efetivo De"] = determination.DateFrom;
                     if (determination.DateTo.HasValue)
@@ -486,7 +489,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 List<TaxDeterminationUsageModel> usageList = new List<TaxDeterminationUsageModel>();
 
                 IXLRow headerRow = ws.Row(1);
-                for (int i = 7; i < lastColumn; i += 3)
+                for (int i = 8; i < lastColumn; i += 3)
                 {
                     TaxDeterminationUsageModel usageModel = new TaxDeterminationUsageModel();
                     usageModel.Usage = headerRow.Cell(i).Value.ToString();
@@ -510,8 +513,9 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                     model.Value2 = row.Cell("B").Value.ToString();
                     model.Value3 = row.Cell("C").Value.ToString();
                     model.Value4 = row.Cell("D").Value.ToString();
+                    model.Value5 = row.Cell("E").Value.ToString();
                     DateTime date;
-                    if (DateTime.TryParse(row.Cell("E").Value.ToString(), out date))
+                    if (DateTime.TryParse(row.Cell("F").Value.ToString(), out date))
                     {
                         model.DateFrom = date;
                     }
@@ -519,9 +523,9 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                     {
                         model.Error = "Coluna 'Efetivo de': Formato da data inválido";
                     }
-                    if (!String.IsNullOrEmpty(row.Cell("F").Value.ToString().Trim()))
+                    if (!String.IsNullOrEmpty(row.Cell("G").Value.ToString().Trim()))
                     {
-                        if (DateTime.TryParse(row.Cell("F").Value.ToString(), out date))
+                        if (DateTime.TryParse(row.Cell("G").Value.ToString(), out date))
                         {
                             model.DateTo = date;
                         }
@@ -531,7 +535,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                         }
                     }
                     model.TaxUsageList = new List<TaxDeterminationUsageModel>();
-                    for (int j = 7; j < lastColumn; j += 3)
+                    for (int j = 8; j < lastColumn; j += 3)
                     {
                         TaxDeterminationUsageModel usageModel = new TaxDeterminationUsageModel();
                         usageModel.Usage = headerRow.Cell(j).Value.ToString();
@@ -542,7 +546,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                         model.TaxUsageList.Add(usageModel);
                     }
 
-                    TaxDeterminationModel duplicated = list.FirstOrDefault(m => m.Value1 == model.Value1 && m.Value2 == model.Value2 && m.Value3 == model.Value3 && m.Value4 == model.Value4);
+                    TaxDeterminationModel duplicated = list.FirstOrDefault(m => m.Value1 == model.Value1 && m.Value2 == model.Value2 && m.Value3 == model.Value3 && m.Value4 == model.Value4 && m.Value5 == model.Value5);
 
                     if (duplicated != null)
                     {

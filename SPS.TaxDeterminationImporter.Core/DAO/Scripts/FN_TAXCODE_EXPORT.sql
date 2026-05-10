@@ -1,0 +1,35 @@
+﻿IF OBJECT_ID (N'dbo.FN_TAXCODE_EXPORT', N'FN') IS NOT NULL  
+    DROP FUNCTION FN_TAXCODE_EXPORT;  
+GO  
+CREATE FUNCTION dbo.FN_TAXCODE_EXPORT(@keyType INT,  @keyValue NVARCHAR(200))
+RETURNS NVARCHAR(MAX)   
+AS   
+
+BEGIN
+	DECLARE @Description NVARCHAR(MAX)
+
+   SELECT @Description =
+	CASE WHEN @keyType IN (1, 2, 6, 16, 17)
+		THEN @keyValue
+		ELSE 
+		CASE @keyType
+			WHEN 3 THEN OMGP.Descrip
+			WHEN 5 THEN ONCM.NcmCode
+			WHEN 9 THEN OITB.ItmsGrpNam
+			WHEN 11 THEN OCRG.GroupName
+			WHEN 12 THEN OCRG.GroupName
+			ELSE @keyValue
+		END
+	END 
+	FROM TCD1
+		LEFT JOIN OMGP
+			ON CAST(OMGP.AbsEntry AS VARCHAR(MAX)) = @keyValue AND @keyType = 3
+		LEFT JOIN ONCM
+			ON CAST(ONCM.AbsEntry AS VARCHAR(MAX)) = @keyValue AND @keyType = 5
+		LEFT JOIN OITB
+			ON CAST(OITB.ItmsGrpCod AS VARCHAR(MAX)) = @keyValue AND @keyType = 9
+		LEFT JOIN OCRG
+			ON CAST(OCRG.GroupCode AS VARCHAR(MAX)) = @keyValue AND @keyType IN (11, 12)
+		
+	RETURN @Description
+END

@@ -162,7 +162,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                         usage.UsageCode = taxUsage.UsageId;
                         usage.TaxCode = taxUsage.TaxCode;
                         usage.FreightTaxCode = taxUsage.TaxCodeExpense;
-                        //usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
+                        usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
                     }
                 }
 
@@ -366,7 +366,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                             {
                                 usage.TaxCode = taxUsage.TaxCode;
                                 usage.FreightTaxCode = taxUsage.TaxCodeExpense;
-                                //usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
+                                usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
                                 exists = true;
                                 break;
                             }
@@ -378,7 +378,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                             usage.UsageCode = taxUsage.UsageId;
                             usage.TaxCode = taxUsage.TaxCode;
                             usage.FreightTaxCode = taxUsage.TaxCodeExpense;
-                            //usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
+                            usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
                         }
                     }
                     currentLine++;

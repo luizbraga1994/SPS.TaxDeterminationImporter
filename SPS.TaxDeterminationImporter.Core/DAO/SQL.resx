@@ -148,7 +148,7 @@
     <value>SELECT GroupCode Id, GroupName Code FROM OCRG WHERE GroupType = 'S'</value>
   </data>
   <data name="TaxDeterminationUsage_GetToExport" xml:space="preserve">
-    <value>SELECT TCD3.Tcd2Id, OUSG.Usage, TCD5.TaxCode, TCD5.ExpTaxCode TaxCodeExpense
+    <value>SELECT TCD3.Tcd2Id, OUSG.Usage, TCD5.TaxCode, TCD5.ExpTaxCode TaxCodeExpense, TCD5.PurTaxCode TaxCodePurchase
 FROM TCD1
 	INNER JOIN TCD2
 		ON TCD2.Tcd1Id = TCD1.AbsId

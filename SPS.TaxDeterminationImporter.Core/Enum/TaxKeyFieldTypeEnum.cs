@@ -12,6 +12,8 @@
         CustomerGroup = 11,
         SupplierGroup = 12,
         Branch = 16,
-        UDF = 17
+        UDF = 17,
+        RegimeFiscal = 27,
+        TipoOperacao = 28
     }
 }

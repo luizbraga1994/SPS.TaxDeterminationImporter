@@ -93,7 +93,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                     }
                     else
                     {
-                        existingOrder = Convert.ToInt32(CrudDAO.ExecuteScalar(String.Format(Scripts.Resource.GetString("TaxDetermination_GetDisplayOrder"), model.Value1, model.Value2, model.Value3, model.Value4, model.Value5)));
+                        existingOrder = Convert.ToInt32(CrudDAO.ExecuteScalar(String.Format(Scripts.Resource.GetString("TaxDetermination_GetDisplayOrder"), keyField.AbsId, model.Value1, model.Value2, model.Value3, model.Value4, model.Value5)));
                     }
                     if (existingOrder == 0)
                     {

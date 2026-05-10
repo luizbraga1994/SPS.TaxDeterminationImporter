@@ -1,86 +1,86 @@
 # SPS.TaxDeterminationImporter
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Este arquivo fornece orientações ao Claude Code (claude.ai/code) ao trabalhar com o código deste repositório.
 
-## Build
+## Compilação
 
-This is a .NET Framework 4.8 solution (Windows-only, x64). Build with MSBuild or Visual Studio:
+Esta é uma solução .NET Framework 4.8 (somente Windows, x64). Compile com MSBuild ou Visual Studio:
 
 ```bash
 msbuild SPS.TaxDeterminationImporter.sln /p:Configuration=Debug /p:Platform="Any CPU"
 msbuild SPS.TaxDeterminationImporter.sln /p:Configuration=Release /p:Platform="Any CPU"
 ```
 
-There are no tests in this project. Validation is done manually inside a running SAP Business One environment.
+Não há testes automatizados no projeto. A validação é feita manualmente dentro de um ambiente SAP Business One em execução.
 
-## External dependencies not in NuGet
+## Dependências externas (fora do NuGet)
 
-The project references two sets of DLLs via relative HintPaths that must exist on the developer machine:
+O projeto referencia DLLs via HintPaths relativos que precisam existir na máquina do desenvolvedor:
 
-| Reference | Expected path from solution root |
+| Referência | Caminho esperado a partir da raiz da solution |
 |---|---|
 | `Interop.SAPbobsCOM.dll` | `../../../../Alfa/DLL/` |
 | `Interop.SAPbouiCOM.dll` | `../../../../Alfa/DLL/` |
 | `SBO.Hub.dll` | `../../../../Util/DLL/` |
 
-These are SAP Business One SDK COM interop assemblies plus a proprietary wrapper (`SBO.Hub`). The solution will not compile without them.
+São assemblies de interop COM do SDK do SAP Business One mais um wrapper proprietário (`SBO.Hub`). A solution não compila sem eles.
 
-## Architecture
+## Arquitetura
 
-This is a **SAP Business One Add-on** — a Windows desktop app that attaches to a running SAP B1 client via COM and extends the Tax Code Determination form (SAP internal form `80401`).
+Este é um **Add-on para SAP Business One** — uma aplicação Windows desktop que se conecta ao cliente SAP B1 via COM e estende o formulário de Determinação de Código de Imposto (formulário interno SAP `80401`).
 
-**Solution projects:**
+**Projetos da solution:**
 
-- `SPS.TaxDeterminationImporter` — WinExe entry point. Connects to SAP, calls `InitializeBLL.Initialize()`, starts the SAP event listener thread, then calls `Application.Run()`.
-- `SPS.TaxDeterminationImporter.Core` — Class library containing all business logic, data access, forms, and models.
+- `SPS.TaxDeterminationImporter` — Ponto de entrada (WinExe). Conecta ao SAP, chama `InitializeBLL.Initialize()`, inicia a thread de escuta de eventos e chama `Application.Run()`.
+- `SPS.TaxDeterminationImporter.Core` — Biblioteca de classes com toda a lógica de negócio, acesso a dados, formulários e modelos.
 
-**Layer structure inside Core:**
+**Estrutura de camadas dentro do Core:**
 
 ```
-BLL/   — Business logic. TaxDeterminationBLL is the core class.
-DAO/   — Data access. Scripts.cs selects the right ResourceManager (SQL Server vs HANA).
-Forms/ — SAP UI event handlers. Not WinForms Forms — they inherit SBO.Hub base classes.
-Model/ — Plain C# model classes with [SBO.Hub.Attributes] for ORM mapping.
-Enum/  — TaxKeyFieldTypeEnum maps SAP's integer key field types to named values.
-Views/ — .srf XML files define custom SAP dialog layouts (FrmImportLog, FrmRemoveTax).
+BLL/   — Lógica de negócio. TaxDeterminationBLL é a classe principal.
+DAO/   — Acesso a dados. Scripts.cs seleciona o ResourceManager correto (SQL Server ou HANA).
+Forms/ — Handlers de eventos da UI do SAP. Não são WinForms — herdam das classes base do SBO.Hub.
+Model/ — Classes de modelo C# simples com [SBO.Hub.Attributes] para mapeamento ORM.
+Enum/  — TaxKeyFieldTypeEnum mapeia os tipos inteiros de campos-chave do SAP para valores nomeados.
+Views/ — Arquivos XML .srf que definem os layouts dos diálogos customizados (FrmImportLog, FrmRemoveTax).
 ```
 
-## Key patterns
+## Padrões importantes
 
-### SAP UI event handling
+### Tratamento de eventos da UI do SAP
 
-Forms in `Forms/` are not standard WinForms. They extend `SystemForm` or `BaseForm` from `SBO.Hub` and override `ItemEvent()`. Event registration is configured in `EventFilterBLL.SetDefaultEvents()` using `EventFilterHelper`. Only registered form/event combinations fire. The `80402` form handlers are commented out — re-enable them in `EventFilterBLL` if needed.
+Os formulários em `Forms/` não são WinForms padrão. Eles herdam de `SystemForm` ou `BaseForm` do `SBO.Hub` e sobrescrevem `ItemEvent()`. O registro de eventos é configurado em `EventFilterBLL.SetDefaultEvents()` usando `EventFilterHelper`. Apenas as combinações formulário/evento registradas são disparadas. Os handlers do formulário `80402` estão comentados — reative-os em `EventFilterBLL` se necessário.
 
-`f80401` injects three custom buttons into SAP's native form `80401` on `et_FORM_LOAD`. All logic executes only when `!ItemEventInfo.BeforeAction` (post-action events).
+`f80401` injeta três botões customizados no formulário nativo `80401` do SAP no evento `et_FORM_LOAD`. Toda a lógica executa apenas quando `!ItemEventInfo.BeforeAction` (eventos pós-ação).
 
-### Database-agnostic queries
+### Queries independentes de banco de dados
 
-All SQL is stored as string resources in two `.resx` files:
-- `DAO/SQL.resx` — SQL Server queries
-- `DAO/Hana.resx` — SAP HANA queries
+Todo o SQL é armazenado como recursos de string em dois arquivos `.resx`:
+- `DAO/SQL.resx` — queries para SQL Server
+- `DAO/Hana.resx` — queries para SAP HANA
 
-`Scripts.SetResourceManager()` selects the correct one at startup based on `SBOApp.Company.DbServerType`. All query access goes through `Scripts.Resource.GetString("QueryKey")`.
+`Scripts.SetResourceManager()` seleciona o correto na inicialização com base em `SBOApp.Company.DbServerType`. Todo acesso a queries passa por `Scripts.Resource.GetString("ChaveDaQuery")`.
 
-When adding a new query: add the string to **both** `SQL.resx` and `Hana.resx` with the same key.
+Ao adicionar uma nova query: inclua a string em **ambos** `SQL.resx` e `Hana.resx` com a mesma chave.
 
-### COM object lifecycle
+### Ciclo de vida de objetos COM
 
-All SAP SDK objects (`TaxCodeDeterminationsTCDService`, `TaxCodeDeterminationTCD`, `ProgressBar`, etc.) must be explicitly released with `Marshal.ReleaseComObject()` in `finally` blocks. Failing to do so causes memory leaks in the SAP client process. See `TaxDeterminationBLL.ImportData()` for the established pattern.
+Todos os objetos do SDK SAP (`TaxCodeDeterminationsTCDService`, `TaxCodeDeterminationTCD`, `ProgressBar`, etc.) devem ser explicitamente liberados com `Marshal.ReleaseComObject()` em blocos `finally`. Não fazer isso causa vazamentos de memória no processo do cliente SAP. Veja `TaxDeterminationBLL.ImportData()` para o padrão estabelecido.
 
-### Import Excel format
+### Formato do Excel para importação
 
-The expected Excel column layout (row 1 = header, row 2+ = data):
+Layout esperado das colunas (linha 1 = cabeçalho, linha 2+ = dados):
 
 | A | B | C | D | E | F | G | H | I | G+3 … |
 |---|---|---|---|---|---|---|---|---|---|
-| Valor1 | Valor2 | Valor3 | Valor4 | Efetivo De | Efetivo Ate | *Usage name* | IVA - *Usage* | DA - *Usage* | *(repeats per usage)* |
+| Valor1 | Valor2 | Valor3 | Valor4 | Efetivo De | Efetivo Ate | *Nome da utilização* | IVA - *Utilização* | DA - *Utilização* | *(repete por utilização)* |
 
-Columns 7+ repeat in groups of 3 for each tax usage. The usage name in the header cell must match an existing `OUSG` record (case-insensitive). The export (`ExportData`) writes files in this same format.
+As colunas 7+ se repetem em grupos de 3 para cada utilização de imposto. O nome da utilização na célula de cabeçalho deve corresponder a um registro existente em `OUSG` (sem distinção de maiúsculas/minúsculas). A exportação (`ExportData`) gera arquivos neste mesmo formato.
 
-### Validation caching
+### Cache de validação
 
-`TaxDeterminationBLL` caches validation lists (BPs, items, NCM codes, etc.) as static fields. These are populated lazily per import run. `BusinesPartnerList` is always re-fetched per import; the others are null-checked and reused across calls within the same process session.
+`TaxDeterminationBLL` armazena listas de validação (parceiros de negócio, itens, códigos NCM, etc.) em campos estáticos. São preenchidos de forma lazy por execução de importação. `BusinesPartnerList` é sempre recarregado a cada importação; os demais são verificados por nulo e reutilizados entre chamadas na mesma sessão do processo.
 
-### Key field types
+### Tipos de campo-chave
 
-`TaxKeyFieldTypeEnum` mirrors SAP's internal numbering for key field types. Types `NcmCode`, `ItemGroup`, `CustomerGroup`, and `SupplierGroup` require description-to-ID conversion (`ConvertDescriptionToId`) before writing to the SAP service. Other types (BP, Item, State, Branch, UDF) are passed as-is.
+`TaxKeyFieldTypeEnum` espelha a numeração interna do SAP para tipos de campos-chave. Os tipos `NcmCode`, `ItemGroup`, `CustomerGroup` e `SupplierGroup` requerem conversão de descrição para ID (`ConvertDescriptionToId`) antes de gravar no serviço SAP. Os demais tipos (BP, Item, Estado, Filial, UDF) são passados diretamente.

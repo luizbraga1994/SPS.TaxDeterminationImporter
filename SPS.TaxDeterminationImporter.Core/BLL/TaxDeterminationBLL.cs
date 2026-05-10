@@ -104,6 +104,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                         values.Value2 = model.Value2;
                         values.Value3 = model.Value3;
                         values.Value4 = model.Value4;
+                        values.Value5 = model.Value5;
                         values.DispOrder = displayOrder;
                     }
                     else

@@ -164,22 +164,19 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                         //usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
                     }
                 }
-                pgb.Stop();
 
                 SBOApp.Application.SetStatusBarMessage("Atualizando informações no banco de dados, por favor aguarde", BoMessageTime.bmt_Long, false);
                 oTcdService.UpdateTaxCodeDeterminationTCD(oTcd);
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                throw;
             }
             finally
             {
                 pgb.Stop();
                 Marshal.ReleaseComObject(pgb);
                 pgb = null;
-                //sw.WriteLine("Fim: " + DateTime.Now.ToString("HH:mm:ss"));
-                //sw.Close();
 
                 Marshal.ReleaseComObject(oTcd);
                 Marshal.ReleaseComObject(oTcdParams);
@@ -188,7 +185,13 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 if (values != null)
                 {
                     Marshal.ReleaseComObject(values);
+                }
+                if (period != null)
+                {
                     Marshal.ReleaseComObject(period);
+                }
+                if (usage != null)
+                {
                     Marshal.ReleaseComObject(usage);
                 }
                 oTcd = null;
@@ -213,7 +216,8 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
             try
             {
                 SBOApp.Application.SetStatusBarMessage("Iniciando exportação, por favor aguarde", BoMessageTime.bmt_Long, false);
-                var wb = new XLWorkbook();
+                using (var wb = new XLWorkbook())
+                {
                 var ws = wb.AddWorksheet("Determinação Imposto");
 
                 List<TaxDeterminationModel> list = new CrudDAO().FillModelListFromSql<TaxDeterminationModel>(String.Format(Scripts.Resource.GetString("TaxDeterminationValues_GetToExport"), lineKey));
@@ -268,6 +272,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 ws.Columns().AdjustToContents();
 
                 wb.SaveAs(Path.Combine(path, lineKey + " - " + description + ".xlsx"));
+                } // using wb
                 return String.Empty;
             }
             catch (Exception ex)
@@ -314,12 +319,6 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 return errorList;
             }
             list = this.ConvertDescriptionToId(list, keyField);
-
-            int displayOrder = 0;
-            if (keyField.Values.Count > 0)
-            {
-                displayOrder = keyField.Values.Item(keyField.Values.Count - 1).DispOrder;
-            }
 
             TaxCodeDeterminationTCDValue values = null;
             TaxCodeDeterminationTCDPeriod period = null;
@@ -381,22 +380,19 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                     }
                     currentLine++;
                 }
-                pgb.Stop();
 
                 SBOApp.Application.SetStatusBarMessage("Atualizando informações no banco de dados, por favor aguarde", BoMessageTime.bmt_Long, false);
                 oTcdService.UpdateTaxCodeDeterminationTCD(oTcd);
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                throw;
             }
             finally
             {
                 pgb.Stop();
                 Marshal.ReleaseComObject(pgb);
                 pgb = null;
-                //sw.WriteLine("Fim: " + DateTime.Now.ToString("HH:mm:ss"));
-                //sw.Close();
 
                 Marshal.ReleaseComObject(oTcd);
                 Marshal.ReleaseComObject(oTcdParams);
@@ -405,7 +401,13 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 if (values != null)
                 {
                     Marshal.ReleaseComObject(values);
+                }
+                if (period != null)
+                {
                     Marshal.ReleaseComObject(period);
+                }
+                if (usage != null)
+                {
                     Marshal.ReleaseComObject(usage);
                 }
                 oTcd = null;
@@ -470,7 +472,8 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
         {
             List<TaxDeterminationModel> list = new List<TaxDeterminationModel>();
 
-            var wb = new XLWorkbook(filePath);
+            using (var wb = new XLWorkbook(filePath))
+            {
             var ws = wb.Worksheet(1);
 
             int lastRow = ws.LastRowUsed().RowNumber() + 1;
@@ -558,6 +561,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 Marshal.ReleaseComObject(pgb);
                 pgb = null;
             }
+            } // using wb
             return list;
         }
 
@@ -577,31 +581,32 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 case TaxKeyFieldTypeEnum.NcmCode:
                     foreach (var item in list)
                     {
-                        if (NcmList != null)
-                        {
-                            item.Value1 = NcmList.FirstOrDefault(m => m.Code == item.Value1).Id.ToString();
-                        }
+                        var ncm = NcmList?.FirstOrDefault(m => m.Code == item.Value1);
+                        if (ncm != null) item.Value1 = ncm.Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.ItemGroup:
                     foreach (var item in list)
                     {
-                        item.Value1 = ItemGroupList.FirstOrDefault(m => m.Code == item.Value1).Id.ToString();
+                        var ig = ItemGroupList?.FirstOrDefault(m => m.Code == item.Value1);
+                        if (ig != null) item.Value1 = ig.Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.CustomerGroup:
                     foreach (var item in list)
                     {
-                        item.Value1 = CustomerGroupList.FirstOrDefault(m => m.Code == item.Value1).Id.ToString();
+                        var cg = CustomerGroupList?.FirstOrDefault(m => m.Code == item.Value1);
+                        if (cg != null) item.Value1 = cg.Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.SupplierGroup:
                     foreach (var item in list)
                     {
-                        item.Value1 = SupplierGroupList.FirstOrDefault(m => m.Code == item.Value1).Id.ToString();
+                        var sg = SupplierGroupList?.FirstOrDefault(m => m.Code == item.Value1);
+                        if (sg != null) item.Value1 = sg.Id.ToString();
                     }
                     break;
             }
@@ -611,28 +616,32 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 case TaxKeyFieldTypeEnum.NcmCode:
                     foreach (var item in list)
                     {
-                        item.Value2 = NcmList.FirstOrDefault(m => m.Code == item.Value2).Id.ToString();
+                        var ncm = NcmList?.FirstOrDefault(m => m.Code == item.Value2);
+                        if (ncm != null) item.Value2 = ncm.Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.ItemGroup:
                     foreach (var item in list)
                     {
-                        item.Value2 = ItemGroupList.FirstOrDefault(m => m.Code == item.Value2).Id.ToString();
+                        var ig = ItemGroupList?.FirstOrDefault(m => m.Code == item.Value2);
+                        if (ig != null) item.Value2 = ig.Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.CustomerGroup:
                     foreach (var item in list)
                     {
-                        item.Value2 = CustomerGroupList.FirstOrDefault(m => m.Code == item.Value2).Id.ToString();
+                        var cg = CustomerGroupList?.FirstOrDefault(m => m.Code == item.Value2);
+                        if (cg != null) item.Value2 = cg.Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.SupplierGroup:
                     foreach (var item in list)
                     {
-                        item.Value2 = SupplierGroupList.FirstOrDefault(m => m.Code == item.Value2).Id.ToString();
+                        var sg = SupplierGroupList?.FirstOrDefault(m => m.Code == item.Value2);
+                        if (sg != null) item.Value2 = sg.Id.ToString();
                     }
                     break;
             }
@@ -642,28 +651,32 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 case TaxKeyFieldTypeEnum.NcmCode:
                     foreach (var item in list)
                     {
-                        item.Value3 = NcmList.FirstOrDefault(m => m.Code == item.Value3).Id.ToString();
+                        var ncm = NcmList?.FirstOrDefault(m => m.Code == item.Value3);
+                        if (ncm != null) item.Value3 = ncm.Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.ItemGroup:
                     foreach (var item in list)
                     {
-                        item.Value3 = ItemGroupList.FirstOrDefault(m => m.Code == item.Value3).Id.ToString();
+                        var ig = ItemGroupList?.FirstOrDefault(m => m.Code == item.Value3);
+                        if (ig != null) item.Value3 = ig.Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.CustomerGroup:
                     foreach (var item in list)
                     {
-                        item.Value3 = CustomerGroupList.FirstOrDefault(m => m.Code == item.Value3).Id.ToString();
+                        var cg = CustomerGroupList?.FirstOrDefault(m => m.Code == item.Value3);
+                        if (cg != null) item.Value3 = cg.Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.SupplierGroup:
                     foreach (var item in list)
                     {
-                        item.Value3 = SupplierGroupList.FirstOrDefault(m => m.Code == item.Value3).Id.ToString();
+                        var sg = SupplierGroupList?.FirstOrDefault(m => m.Code == item.Value3);
+                        if (sg != null) item.Value3 = sg.Id.ToString();
                     }
                     break;
             }
@@ -673,28 +686,32 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 case TaxKeyFieldTypeEnum.NcmCode:
                     foreach (var item in list)
                     {
-                        item.Value4 = NcmList.FirstOrDefault(m => m.Code == item.Value4).Id.ToString();
+                        var ncm = NcmList?.FirstOrDefault(m => m.Code == item.Value4);
+                        if (ncm != null) item.Value4 = ncm.Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.ItemGroup:
                     foreach (var item in list)
                     {
-                        item.Value4 = ItemGroupList.FirstOrDefault(m => m.Code == item.Value4).Id.ToString();
+                        var ig = ItemGroupList?.FirstOrDefault(m => m.Code == item.Value4);
+                        if (ig != null) item.Value4 = ig.Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.CustomerGroup:
                     foreach (var item in list)
                     {
-                        item.Value4 = CustomerGroupList.FirstOrDefault(m => m.Code == item.Value4).Id.ToString();
+                        var cg = CustomerGroupList?.FirstOrDefault(m => m.Code == item.Value4);
+                        if (cg != null) item.Value4 = cg.Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.SupplierGroup:
                     foreach (var item in list)
                     {
-                        item.Value4 = SupplierGroupList.FirstOrDefault(m => m.Code == item.Value4).Id.ToString();
+                        var sg = SupplierGroupList?.FirstOrDefault(m => m.Code == item.Value4);
+                        if (sg != null) item.Value4 = sg.Id.ToString();
                     }
                     break;
             }
@@ -708,13 +725,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
 
         public List<TaxDeterminationModel> ValidateList(List<TaxDeterminationModel> list, TaxCodeDeterminationTCDKeyField keyField)
         {
-            List<TaxDeterminationModel> errorList = new List<TaxDeterminationModel>();
-
-            errorList = ValidateTax(list);
-            if (errorList.Any(m => !String.IsNullOrEmpty(m.Error)))
-            {
-                errorList.AddRange(list.Where(m => !String.IsNullOrEmpty(m.Error)));
-            }
+            List<TaxDeterminationModel> errorList = ValidateTax(list);
 
             TaxKeyFieldTypeEnum fieldType1 = (TaxKeyFieldTypeEnum)keyField.KeyField1;
             TaxKeyFieldTypeEnum fieldType2 = (TaxKeyFieldTypeEnum)keyField.KeyField2;
@@ -895,7 +906,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                     {
                         TaxDeterminationModel errorModel = new TaxDeterminationModel();
                         errorModel.Line = model.Line;
-                        errorModel.Error += $" {tax.TaxCodeExpense} - Código de imposto sobre compra não encontrado!";
+                        errorModel.Error += $" {tax.TaxCodePurchase} - Código de imposto sobre compra não encontrado!";
                         errorList.Add(errorModel);
                     }
                 }

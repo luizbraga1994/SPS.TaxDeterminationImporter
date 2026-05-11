@@ -219,62 +219,62 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 SBOApp.Application.SetStatusBarMessage("Iniciando exportação, por favor aguarde", BoMessageTime.bmt_Long, false);
                 using (var wb = new XLWorkbook())
                 {
-                var ws = wb.AddWorksheet("Determinação Imposto");
+                    var ws = wb.AddWorksheet("Determinação Imposto");
 
-                List<TaxDeterminationModel> list = new CrudDAO().FillModelListFromSql<TaxDeterminationModel>(String.Format(Scripts.Resource.GetString("TaxDeterminationValues_GetToExport"), lineKey));
+                    List<TaxDeterminationModel> list = new CrudDAO().FillModelListFromSql<TaxDeterminationModel>(String.Format(Scripts.Resource.GetString("TaxDeterminationValues_GetToExport"), lineKey));
 
-                pgb = SBOApp.Application.StatusBar.CreateProgressBar("Exportando dados", list.Count, false);
+                    pgb = SBOApp.Application.StatusBar.CreateProgressBar("Exportando dados", list.Count, false);
 
-                List<TaxDeterminationUsageModel> taxCodeList = new CrudDAO().FillModelListFromSql<TaxDeterminationUsageModel>(String.Format(Scripts.Resource.GetString("TaxDeterminationUsage_GetToExport"), lineKey));
+                    List<TaxDeterminationUsageModel> taxCodeList = new CrudDAO().FillModelListFromSql<TaxDeterminationUsageModel>(String.Format(Scripts.Resource.GetString("TaxDeterminationUsage_GetToExport"), lineKey));
 
-                System.Data.DataTable dataTable = new System.Data.DataTable();
-                dataTable.Columns.Add("Valor1", typeof(string));
-                dataTable.Columns.Add("Valor2", typeof(string));
-                dataTable.Columns.Add("Valor3", typeof(string));
-                dataTable.Columns.Add("Valor4", typeof(string));
-                dataTable.Columns.Add("Valor5", typeof(string));
-                dataTable.Columns.Add("Efetivo De", typeof(DateTime));
-                dataTable.Columns.Add("Efetivo Ate", typeof(DateTime));
+                    System.Data.DataTable dataTable = new System.Data.DataTable();
+                    dataTable.Columns.Add("Valor1", typeof(string));
+                    dataTable.Columns.Add("Valor2", typeof(string));
+                    dataTable.Columns.Add("Valor3", typeof(string));
+                    dataTable.Columns.Add("Valor4", typeof(string));
+                    dataTable.Columns.Add("Valor5", typeof(string));
+                    dataTable.Columns.Add("Efetivo De", typeof(DateTime));
+                    dataTable.Columns.Add("Efetivo Ate", typeof(DateTime));
 
-                List<string> usageList = taxCodeList.Select(s => s.Usage).Distinct().ToList();
-                foreach (var usage in usageList)
-                {
-                    dataTable.Columns.Add(usage, typeof(string));
-                    dataTable.Columns.Add("IVA - " + usage, typeof(string));
-                    dataTable.Columns.Add("DA - " + usage, typeof(string));
-                }
-
-                foreach (var determination in list)
-                {
-                    pgb.Value++;
-
-                    DataRow dataRow = dataTable.NewRow();
-                    dataRow["Valor1"] = determination.Value1;
-                    dataRow["Valor2"] = determination.Value2;
-                    dataRow["Valor3"] = determination.Value3;
-                    dataRow["Valor4"] = determination.Value4;
-                    dataRow["Valor5"] = determination.Value5;
-
-                    dataRow["Efetivo De"] = determination.DateFrom;
-                    if (determination.DateTo.HasValue)
+                    List<string> usageList = taxCodeList.Select(s => s.Usage).Distinct().ToList();
+                    foreach (var usage in usageList)
                     {
-                        dataRow["Efetivo Ate"] = determination.DateTo;
+                        dataTable.Columns.Add(usage, typeof(string));
+                        dataTable.Columns.Add("IVA - " + usage, typeof(string));
+                        dataTable.Columns.Add("DA - " + usage, typeof(string));
                     }
-                    List<TaxDeterminationUsageModel> taxCodeListLine = taxCodeList.Where(m => m.Tcd2Id == determination.Tcd2Id).ToList();
 
-                    foreach (var taxCode in taxCodeListLine)
+                    foreach (var determination in list)
                     {
-                        dataRow[taxCode.Usage] = taxCode.TaxCodePurchase;
-                        dataRow["IVA - " + taxCode.Usage] = taxCode.TaxCode;
-                        dataRow["DA - " + taxCode.Usage] = taxCode.TaxCodeExpense;
+                        pgb.Value++;
+
+                        DataRow dataRow = dataTable.NewRow();
+                        dataRow["Valor1"] = determination.Value1;
+                        dataRow["Valor2"] = determination.Value2;
+                        dataRow["Valor3"] = determination.Value3;
+                        dataRow["Valor4"] = determination.Value4;
+                        dataRow["Valor5"] = determination.Value5;
+
+                        dataRow["Efetivo De"] = determination.DateFrom;
+                        if (determination.DateTo.HasValue)
+                        {
+                            dataRow["Efetivo Ate"] = determination.DateTo;
+                        }
+                        List<TaxDeterminationUsageModel> taxCodeListLine = taxCodeList.Where(m => m.Tcd2Id == determination.Tcd2Id).ToList();
+
+                        foreach (var taxCode in taxCodeListLine)
+                        {
+                            dataRow[taxCode.Usage] = taxCode.TaxCodePurchase;
+                            dataRow["IVA - " + taxCode.Usage] = taxCode.TaxCode;
+                            dataRow["DA - " + taxCode.Usage] = taxCode.TaxCodeExpense;
+                        }
+                        dataTable.Rows.Add(dataRow);
                     }
-                    dataTable.Rows.Add(dataRow);
-                }
 
-                ws.Cell(1, "A").InsertTable(dataTable);
-                ws.Columns().AdjustToContents();
+                    ws.Cell(1, "A").InsertTable(dataTable);
+                    ws.Columns().AdjustToContents();
 
-                wb.SaveAs(Path.Combine(path, lineKey + " - " + description + ".xlsx"));
+                    wb.SaveAs(Path.Combine(path, lineKey + " - " + description + ".xlsx"));
                 } // using wb
                 return String.Empty;
             }
@@ -477,94 +477,94 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
 
             using (var wb = new XLWorkbook(filePath))
             {
-            var ws = wb.Worksheet(1);
+                var ws = wb.Worksheet(1);
 
-            int lastRow = ws.LastRowUsed().RowNumber() + 1;
-            int lastColumn = ws.LastColumnUsed().ColumnNumber() + 1;
+                int lastRow = ws.LastRowUsed().RowNumber() + 1;
+                int lastColumn = ws.LastColumnUsed().ColumnNumber() + 1;
 
-            ProgressBar pgb = SBOApp.Application.StatusBar.CreateProgressBar("Carregando dados do arquivo", lastRow, false);
+                ProgressBar pgb = SBOApp.Application.StatusBar.CreateProgressBar("Carregando dados do arquivo", lastRow, false);
 
-            try
-            {
-                List<TaxDeterminationUsageModel> usageList = new List<TaxDeterminationUsageModel>();
-
-                IXLRow headerRow = ws.Row(1);
-                for (int i = 8; i < lastColumn; i += 3)
+                try
                 {
-                    TaxDeterminationUsageModel usageModel = new TaxDeterminationUsageModel();
-                    usageModel.Usage = headerRow.Cell(i).Value.ToString();
+                    List<TaxDeterminationUsageModel> usageList = new List<TaxDeterminationUsageModel>();
 
-                    usageModel.UsageId = Convert.ToInt32(CrudDAO.ExecuteScalar(String.Format(Scripts.Resource.GetString("Usage_GetIdByDescription"), headerRow.Cell(i).Value.ToString().ToLower())));
-                    if (usageModel.UsageId == 0)
+                    IXLRow headerRow = ws.Row(1);
+                    for (int i = 8; i < lastColumn; i += 3)
                     {
-                        throw new Exception($"Utilização '{headerRow.Cell(i).Value.ToString()}' não encontrada");
-                    }
-                    usageList.Add(usageModel);
-                }
+                        TaxDeterminationUsageModel usageModel = new TaxDeterminationUsageModel();
+                        usageModel.Usage = headerRow.Cell(i).Value.ToString();
 
-                for (int i = 2; i < lastRow; i++)
-                {
-                    pgb.Value++;
-                    IXLRow row = ws.Row(i);
-
-                    TaxDeterminationModel model = new TaxDeterminationModel();
-                    model.Line = i;
-                    model.Value1 = row.Cell("A").Value.ToString();
-                    model.Value2 = row.Cell("B").Value.ToString();
-                    model.Value3 = row.Cell("C").Value.ToString();
-                    model.Value4 = row.Cell("D").Value.ToString();
-                    model.Value5 = row.Cell("E").Value.ToString();
-                    DateTime date;
-                    if (DateTime.TryParse(row.Cell("F").Value.ToString(), out date))
-                    {
-                        model.DateFrom = date;
-                    }
-                    else
-                    {
-                        model.Error = "Coluna 'Efetivo de': Formato da data inválido";
-                    }
-                    if (!String.IsNullOrEmpty(row.Cell("G").Value.ToString().Trim()))
-                    {
-                        if (DateTime.TryParse(row.Cell("G").Value.ToString(), out date))
+                        usageModel.UsageId = Convert.ToInt32(CrudDAO.ExecuteScalar(String.Format(Scripts.Resource.GetString("Usage_GetIdByDescription"), headerRow.Cell(i).Value.ToString().ToLower())));
+                        if (usageModel.UsageId == 0)
                         {
-                            model.DateTo = date;
+                            throw new Exception($"Utilização '{headerRow.Cell(i).Value.ToString()}' não encontrada");
+                        }
+                        usageList.Add(usageModel);
+                    }
+
+                    for (int i = 2; i < lastRow; i++)
+                    {
+                        pgb.Value++;
+                        IXLRow row = ws.Row(i);
+
+                        TaxDeterminationModel model = new TaxDeterminationModel();
+                        model.Line = i;
+                        model.Value1 = row.Cell("A").Value.ToString();
+                        model.Value2 = row.Cell("B").Value.ToString();
+                        model.Value3 = row.Cell("C").Value.ToString();
+                        model.Value4 = row.Cell("D").Value.ToString();
+                        model.Value5 = row.Cell("E").Value.ToString();
+                        DateTime date;
+                        if (DateTime.TryParse(row.Cell("F").Value.ToString(), out date))
+                        {
+                            model.DateFrom = date;
                         }
                         else
                         {
-                            model.Error = "Coluna 'Efetivo até': Formato da data inválido";
+                            model.Error = "Coluna 'Efetivo de': Formato da data inválido";
                         }
-                    }
-                    model.TaxUsageList = new List<TaxDeterminationUsageModel>();
-                    for (int j = 8; j < lastColumn; j += 3)
-                    {
-                        TaxDeterminationUsageModel usageModel = new TaxDeterminationUsageModel();
-                        usageModel.Usage = headerRow.Cell(j).Value.ToString();
-                        usageModel.UsageId = usageList.FirstOrDefault(m => m.Usage == headerRow.Cell(j).Value.ToString()).UsageId;
-                        usageModel.TaxCodePurchase = row.Cell(j).Value.ToString();
-                        usageModel.TaxCode = row.Cell(j + 1).Value.ToString();
-                        usageModel.TaxCodeExpense = row.Cell(j + 2).Value.ToString();
-                        model.TaxUsageList.Add(usageModel);
-                    }
+                        if (!String.IsNullOrEmpty(row.Cell("G").Value.ToString().Trim()))
+                        {
+                            if (DateTime.TryParse(row.Cell("G").Value.ToString(), out date))
+                            {
+                                model.DateTo = date;
+                            }
+                            else
+                            {
+                                model.Error = "Coluna 'Efetivo até': Formato da data inválido";
+                            }
+                        }
+                        model.TaxUsageList = new List<TaxDeterminationUsageModel>();
+                        for (int j = 8; j < lastColumn; j += 3)
+                        {
+                            TaxDeterminationUsageModel usageModel = new TaxDeterminationUsageModel();
+                            usageModel.Usage = headerRow.Cell(j).Value.ToString();
+                            usageModel.UsageId = usageList.FirstOrDefault(m => m.Usage == headerRow.Cell(j).Value.ToString()).UsageId;
+                            usageModel.TaxCodePurchase = row.Cell(j).Value.ToString();
+                            usageModel.TaxCode = row.Cell(j + 1).Value.ToString();
+                            usageModel.TaxCodeExpense = row.Cell(j + 2).Value.ToString();
+                            model.TaxUsageList.Add(usageModel);
+                        }
 
-                    TaxDeterminationModel duplicated = list.FirstOrDefault(m => m.Value1 == model.Value1 && m.Value2 == model.Value2 && m.Value3 == model.Value3 && m.Value4 == model.Value4 && m.Value5 == model.Value5);
+                        TaxDeterminationModel duplicated = list.FirstOrDefault(m => m.Value1 == model.Value1 && m.Value2 == model.Value2 && m.Value3 == model.Value3 && m.Value4 == model.Value4 && m.Value5 == model.Value5);
 
-                    if (duplicated != null)
-                    {
-                        model.Error = "Valores já existentes na linha " + duplicated.Line;
+                        if (duplicated != null)
+                        {
+                            model.Error = "Valores já existentes na linha " + duplicated.Line;
+                        }
+                        list.Add(model);
                     }
-                    list.Add(model);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao ler arquivo: " + ex.Message);
-            }
-            finally
-            {
-                pgb.Stop();
-                Marshal.ReleaseComObject(pgb);
-                pgb = null;
-            }
+                catch (Exception ex)
+                {
+                    throw new Exception("Erro ao ler arquivo: " + ex.Message);
+                }
+                finally
+                {
+                    pgb.Stop();
+                    Marshal.ReleaseComObject(pgb);
+                    pgb = null;
+                }
             } // using wb
             return list;
         }

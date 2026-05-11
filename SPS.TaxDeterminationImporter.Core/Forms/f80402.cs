@@ -47,10 +47,7 @@ namespace SPS.TaxDeterminationImporter.Core.Forms
                             int selectedRow = mt_Tax.GetNextSelectedRow();
                             if (selectedRow != -1)
                             {
-                                if (ItemEventInfo.ItemUID == "bt_Import")
-                                {
-                                    this.Import(selectedRow);
-                                }
+                                this.Import(selectedRow);
                             }
                             else
                             {

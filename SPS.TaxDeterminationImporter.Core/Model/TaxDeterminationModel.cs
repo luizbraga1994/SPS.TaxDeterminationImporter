@@ -14,6 +14,7 @@ namespace SPS.TaxDeterminationImporter.Core.Model
         public string Value2 { get; set; }
         public string Value3 { get; set; }
         public string Value4 { get; set; }
+        public string Value5 { get; set; }
 
         public DateTime DateFrom { get; set; }
         public DateTime? DateTo { get; set; }

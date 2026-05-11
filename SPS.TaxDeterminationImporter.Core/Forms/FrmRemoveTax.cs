@@ -1,4 +1,4 @@
-﻿using SAPbouiCOM;
+using SAPbouiCOM;
 using SBO.Hub;
 using SBO.Hub.Forms;
 using SPS.TaxDeterminationImporter.Core.BLL;
@@ -23,7 +23,7 @@ namespace SPS.TaxDeterminationImporter.Core.Forms
         Form Form;
         private static int LineKey;
 
-        public void Show(int lineKey, string field1, string field2, string field3, string field4, string description)
+        public void Show(int lineKey, string field1, string field2, string field3, string field4, string field5, string description)
         {
             LineKey = lineKey;
             Form = (Form)base.Show();
@@ -42,10 +42,14 @@ namespace SPS.TaxDeterminationImporter.Core.Forms
             {
                 field4 = "Campo-chave 4";
             }
+            if (String.IsNullOrEmpty(field5))
+            {
+                field5 = "Campo-chave 5";
+            }
 
             Form.Freeze(true);
             DataTable dt_Remove = Form.DataSources.DataTables.Item("dt_Remove");
-            string sql = String.Format(Scripts.Resource.GetString("Tax_Determination_GetFields"), lineKey, field1, field2, field3, field4);
+            string sql = String.Format(Scripts.Resource.GetString("TaxDetermination_GetFields"), lineKey, field1, field2, field3, field4, field5);
             dt_Remove.ExecuteQuery(sql);
 
             Grid gr_Remove = Form.Items.Item("gr_Remove").Specific as Grid;
@@ -99,7 +103,7 @@ namespace SPS.TaxDeterminationImporter.Core.Forms
             }
             Form.Freeze(false);
         }
-        
+
         private void Remove()
         {
             List<int> selectedLines = new List<int>();

@@ -85,7 +85,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
 
                     if (existingList != null)
                     {
-                        TaxDeterminationModel existingModel = existingList.FirstOrDefault(m => m.Value1 == model.Value1 && m.Value2 == model.Value2 && m.Value3 == model.Value3 && m.Value4 == model.Value4 && m.Value5 == model.Value5);
+                        TaxDeterminationModel existingModel = existingList.FirstOrDefault(m => m.Value1 == model.Value1 && m.Value2 == model.Value2 && m.Value3 == model.Value3 && m.Value4 == model.Value4);
                         if (existingModel != null)
                         {
                             existingOrder = existingModel.DisplayOrder;
@@ -93,7 +93,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                     }
                     else
                     {
-                        existingOrder = Convert.ToInt32(CrudDAO.ExecuteScalar(String.Format(Scripts.Resource.GetString("TaxDetermination_GetDisplayOrder"), keyField.AbsId, model.Value1, model.Value2, model.Value3, model.Value4, model.Value5)));
+                        existingOrder = Convert.ToInt32(CrudDAO.ExecuteScalar(String.Format(Scripts.Resource.GetString("TaxDetermination_GetDisplayOrder"), model.Value1, model.Value2, model.Value3, model.Value4)));
                     }
                     if (existingOrder == 0)
                     {
@@ -104,7 +104,6 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                         values.Value2 = model.Value2;
                         values.Value3 = model.Value3;
                         values.Value4 = model.Value4;
-                        values.Value5 = model.Value5;
                         values.DispOrder = displayOrder;
                     }
                     else
@@ -162,22 +161,25 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                         usage.UsageCode = taxUsage.UsageId;
                         usage.TaxCode = taxUsage.TaxCode;
                         usage.FreightTaxCode = taxUsage.TaxCodeExpense;
-                        usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
+                        //usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
                     }
                 }
+                pgb.Stop();
 
                 SBOApp.Application.SetStatusBarMessage("Atualizando informações no banco de dados, por favor aguarde", BoMessageTime.bmt_Long, false);
                 oTcdService.UpdateTaxCodeDeterminationTCD(oTcd);
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             finally
             {
                 pgb.Stop();
                 Marshal.ReleaseComObject(pgb);
                 pgb = null;
+                //sw.WriteLine("Fim: " + DateTime.Now.ToString("HH:mm:ss"));
+                //sw.Close();
 
                 Marshal.ReleaseComObject(oTcd);
                 Marshal.ReleaseComObject(oTcdParams);
@@ -186,13 +188,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 if (values != null)
                 {
                     Marshal.ReleaseComObject(values);
-                }
-                if (period != null)
-                {
                     Marshal.ReleaseComObject(period);
-                }
-                if (usage != null)
-                {
                     Marshal.ReleaseComObject(usage);
                 }
                 oTcd = null;
@@ -217,65 +213,61 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
             try
             {
                 SBOApp.Application.SetStatusBarMessage("Iniciando exportação, por favor aguarde", BoMessageTime.bmt_Long, false);
-                using (var wb = new XLWorkbook())
+                var wb = new XLWorkbook();
+                var ws = wb.AddWorksheet("Determinação Imposto");
+
+                List<TaxDeterminationModel> list = new CrudDAO().FillModelListFromSql<TaxDeterminationModel>(String.Format(Scripts.Resource.GetString("TaxDeterminationValues_GetToExport"), lineKey));
+
+                pgb = SBOApp.Application.StatusBar.CreateProgressBar("Exportando dados", list.Count, false);
+
+                List<TaxDeterminationUsageModel> taxCodeList = new CrudDAO().FillModelListFromSql<TaxDeterminationUsageModel>(String.Format(Scripts.Resource.GetString("TaxDeterminationUsage_GetToExport"), lineKey));
+
+                System.Data.DataTable dataTable = new System.Data.DataTable();
+                dataTable.Columns.Add("Valor1", typeof(string));
+                dataTable.Columns.Add("Valor2", typeof(string));
+                dataTable.Columns.Add("Valor3", typeof(string));
+                dataTable.Columns.Add("Valor4", typeof(string));
+                dataTable.Columns.Add("Efetivo De", typeof(DateTime));
+                dataTable.Columns.Add("Efetivo Ate", typeof(DateTime));
+
+                List<string> usageList = taxCodeList.Select(s => s.Usage).Distinct().ToList();
+                foreach (var usage in usageList)
                 {
-                    var ws = wb.AddWorksheet("Determinação Imposto");
+                    dataTable.Columns.Add(usage, typeof(string));
+                    dataTable.Columns.Add("IVA - " + usage, typeof(string));
+                    dataTable.Columns.Add("DA - " + usage, typeof(string));
+                }
 
-                    List<TaxDeterminationModel> list = new CrudDAO().FillModelListFromSql<TaxDeterminationModel>(String.Format(Scripts.Resource.GetString("TaxDeterminationValues_GetToExport"), lineKey));
+                foreach (var determination in list)
+                {
+                    pgb.Value++;
 
-                    pgb = SBOApp.Application.StatusBar.CreateProgressBar("Exportando dados", list.Count, false);
+                    DataRow dataRow = dataTable.NewRow();
+                    dataRow["Valor1"] = determination.Value1;
+                    dataRow["Valor2"] = determination.Value2;
+                    dataRow["Valor3"] = determination.Value3;
+                    dataRow["Valor4"] = determination.Value4;
 
-                    List<TaxDeterminationUsageModel> taxCodeList = new CrudDAO().FillModelListFromSql<TaxDeterminationUsageModel>(String.Format(Scripts.Resource.GetString("TaxDeterminationUsage_GetToExport"), lineKey));
-
-                    System.Data.DataTable dataTable = new System.Data.DataTable();
-                    dataTable.Columns.Add("Valor1", typeof(string));
-                    dataTable.Columns.Add("Valor2", typeof(string));
-                    dataTable.Columns.Add("Valor3", typeof(string));
-                    dataTable.Columns.Add("Valor4", typeof(string));
-                    dataTable.Columns.Add("Valor5", typeof(string));
-                    dataTable.Columns.Add("Efetivo De", typeof(DateTime));
-                    dataTable.Columns.Add("Efetivo Ate", typeof(DateTime));
-
-                    List<string> usageList = taxCodeList.Select(s => s.Usage).Distinct().ToList();
-                    foreach (var usage in usageList)
+                    dataRow["Efetivo De"] = determination.DateFrom;
+                    if (determination.DateTo.HasValue)
                     {
-                        dataTable.Columns.Add(usage, typeof(string));
-                        dataTable.Columns.Add("IVA - " + usage, typeof(string));
-                        dataTable.Columns.Add("DA - " + usage, typeof(string));
+                        dataRow["Efetivo Ate"] = determination.DateTo;
                     }
+                    List<TaxDeterminationUsageModel> taxCodeListLine = taxCodeList.Where(m => m.Tcd2Id == determination.Tcd2Id).ToList();
 
-                    foreach (var determination in list)
+                    foreach (var taxCode in taxCodeListLine)
                     {
-                        pgb.Value++;
-
-                        DataRow dataRow = dataTable.NewRow();
-                        dataRow["Valor1"] = determination.Value1;
-                        dataRow["Valor2"] = determination.Value2;
-                        dataRow["Valor3"] = determination.Value3;
-                        dataRow["Valor4"] = determination.Value4;
-                        dataRow["Valor5"] = determination.Value5;
-
-                        dataRow["Efetivo De"] = determination.DateFrom;
-                        if (determination.DateTo.HasValue)
-                        {
-                            dataRow["Efetivo Ate"] = determination.DateTo;
-                        }
-                        List<TaxDeterminationUsageModel> taxCodeListLine = taxCodeList.Where(m => m.Tcd2Id == determination.Tcd2Id).ToList();
-
-                        foreach (var taxCode in taxCodeListLine)
-                        {
-                            dataRow[taxCode.Usage] = taxCode.TaxCodePurchase;
-                            dataRow["IVA - " + taxCode.Usage] = taxCode.TaxCode;
-                            dataRow["DA - " + taxCode.Usage] = taxCode.TaxCodeExpense;
-                        }
-                        dataTable.Rows.Add(dataRow);
+                        dataRow[taxCode.Usage] = taxCode.TaxCodePurchase;
+                        dataRow["IVA - " + taxCode.Usage] = taxCode.TaxCode;
+                        dataRow["DA - " + taxCode.Usage] = taxCode.TaxCodeExpense;
                     }
+                    dataTable.Rows.Add(dataRow);
+                }
 
-                    ws.Cell(1, "A").InsertTable(dataTable);
-                    ws.Columns().AdjustToContents();
+                ws.Cell(1, "A").InsertTable(dataTable);
+                ws.Columns().AdjustToContents();
 
-                    wb.SaveAs(Path.Combine(path, lineKey + " - " + description + ".xlsx"));
-                } // using wb
+                wb.SaveAs(Path.Combine(path, lineKey + " - " + description + ".xlsx"));
                 return String.Empty;
             }
             catch (Exception ex)
@@ -323,6 +315,12 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
             }
             list = this.ConvertDescriptionToId(list, keyField);
 
+            int displayOrder = 0;
+            if (keyField.Values.Count > 0)
+            {
+                displayOrder = keyField.Values.Item(keyField.Values.Count - 1).DispOrder;
+            }
+
             TaxCodeDeterminationTCDValue values = null;
             TaxCodeDeterminationTCDPeriod period = null;
             TaxCodeDeterminationTCDByUsage usage = null;
@@ -366,7 +364,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                             {
                                 usage.TaxCode = taxUsage.TaxCode;
                                 usage.FreightTaxCode = taxUsage.TaxCodeExpense;
-                                usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
+                                //usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
                                 exists = true;
                                 break;
                             }
@@ -378,24 +376,27 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                             usage.UsageCode = taxUsage.UsageId;
                             usage.TaxCode = taxUsage.TaxCode;
                             usage.FreightTaxCode = taxUsage.TaxCodeExpense;
-                            usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
+                            //usage.PurchaseTaxCode = taxUsage.TaxCodePurchase;
                         }
                     }
                     currentLine++;
                 }
+                pgb.Stop();
 
                 SBOApp.Application.SetStatusBarMessage("Atualizando informações no banco de dados, por favor aguarde", BoMessageTime.bmt_Long, false);
                 oTcdService.UpdateTaxCodeDeterminationTCD(oTcd);
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             finally
             {
                 pgb.Stop();
                 Marshal.ReleaseComObject(pgb);
                 pgb = null;
+                //sw.WriteLine("Fim: " + DateTime.Now.ToString("HH:mm:ss"));
+                //sw.Close();
 
                 Marshal.ReleaseComObject(oTcd);
                 Marshal.ReleaseComObject(oTcdParams);
@@ -404,13 +405,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 if (values != null)
                 {
                     Marshal.ReleaseComObject(values);
-                }
-                if (period != null)
-                {
                     Marshal.ReleaseComObject(period);
-                }
-                if (usage != null)
-                {
                     Marshal.ReleaseComObject(usage);
                 }
                 oTcd = null;
@@ -475,97 +470,94 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
         {
             List<TaxDeterminationModel> list = new List<TaxDeterminationModel>();
 
-            using (var wb = new XLWorkbook(filePath))
+            var wb = new XLWorkbook(filePath);
+            var ws = wb.Worksheet(1);
+
+            int lastRow = ws.LastRowUsed().RowNumber() + 1;
+            int lastColumn = ws.LastColumnUsed().ColumnNumber() + 1;
+
+            ProgressBar pgb = SBOApp.Application.StatusBar.CreateProgressBar("Carregando dados do arquivo", lastRow, false);
+
+            try
             {
-                var ws = wb.Worksheet(1);
+                List<TaxDeterminationUsageModel> usageList = new List<TaxDeterminationUsageModel>();
 
-                int lastRow = ws.LastRowUsed().RowNumber() + 1;
-                int lastColumn = ws.LastColumnUsed().ColumnNumber() + 1;
-
-                ProgressBar pgb = SBOApp.Application.StatusBar.CreateProgressBar("Carregando dados do arquivo", lastRow, false);
-
-                try
+                IXLRow headerRow = ws.Row(1);
+                for (int i = 7; i < lastColumn; i += 3)
                 {
-                    List<TaxDeterminationUsageModel> usageList = new List<TaxDeterminationUsageModel>();
+                    TaxDeterminationUsageModel usageModel = new TaxDeterminationUsageModel();
+                    usageModel.Usage = headerRow.Cell(i).Value.ToString();
 
-                    IXLRow headerRow = ws.Row(1);
-                    for (int i = 8; i < lastColumn; i += 3)
+                    usageModel.UsageId = Convert.ToInt32(CrudDAO.ExecuteScalar(String.Format(Scripts.Resource.GetString("Usage_GetIdByDescription"), headerRow.Cell(i).Value.ToString().ToLower())));
+                    if (usageModel.UsageId == 0)
                     {
-                        TaxDeterminationUsageModel usageModel = new TaxDeterminationUsageModel();
-                        usageModel.Usage = headerRow.Cell(i).Value.ToString();
-
-                        usageModel.UsageId = Convert.ToInt32(CrudDAO.ExecuteScalar(String.Format(Scripts.Resource.GetString("Usage_GetIdByDescription"), headerRow.Cell(i).Value.ToString().ToLower())));
-                        if (usageModel.UsageId == 0)
-                        {
-                            throw new Exception($"Utilização '{headerRow.Cell(i).Value.ToString()}' não encontrada");
-                        }
-                        usageList.Add(usageModel);
+                        throw new Exception($"Utilização '{headerRow.Cell(i).Value.ToString()}' não encontrada");
                     }
+                    usageList.Add(usageModel);
+                }
 
-                    for (int i = 2; i < lastRow; i++)
+                for (int i = 2; i < lastRow; i++)
+                {
+                    pgb.Value++;
+                    IXLRow row = ws.Row(i);
+
+                    TaxDeterminationModel model = new TaxDeterminationModel();
+                    model.Line = i;
+                    model.Value1 = row.Cell("A").Value.ToString();
+                    model.Value2 = row.Cell("B").Value.ToString();
+                    model.Value3 = row.Cell("C").Value.ToString();
+                    model.Value4 = row.Cell("D").Value.ToString();
+                    DateTime date;
+                    if (DateTime.TryParse(row.Cell("E").Value.ToString(), out date))
                     {
-                        pgb.Value++;
-                        IXLRow row = ws.Row(i);
-
-                        TaxDeterminationModel model = new TaxDeterminationModel();
-                        model.Line = i;
-                        model.Value1 = row.Cell("A").Value.ToString();
-                        model.Value2 = row.Cell("B").Value.ToString();
-                        model.Value3 = row.Cell("C").Value.ToString();
-                        model.Value4 = row.Cell("D").Value.ToString();
-                        model.Value5 = row.Cell("E").Value.ToString();
-                        DateTime date;
+                        model.DateFrom = date;
+                    }
+                    else
+                    {
+                        model.Error = "Coluna 'Efetivo de': Formato da data inválido";
+                    }
+                    if (!String.IsNullOrEmpty(row.Cell("F").Value.ToString().Trim()))
+                    {
                         if (DateTime.TryParse(row.Cell("F").Value.ToString(), out date))
                         {
-                            model.DateFrom = date;
+                            model.DateTo = date;
                         }
                         else
                         {
-                            model.Error = "Coluna 'Efetivo de': Formato da data inválido";
+                            model.Error = "Coluna 'Efetivo até': Formato da data inválido";
                         }
-                        if (!String.IsNullOrEmpty(row.Cell("G").Value.ToString().Trim()))
-                        {
-                            if (DateTime.TryParse(row.Cell("G").Value.ToString(), out date))
-                            {
-                                model.DateTo = date;
-                            }
-                            else
-                            {
-                                model.Error = "Coluna 'Efetivo até': Formato da data inválido";
-                            }
-                        }
-                        model.TaxUsageList = new List<TaxDeterminationUsageModel>();
-                        for (int j = 8; j < lastColumn; j += 3)
-                        {
-                            TaxDeterminationUsageModel usageModel = new TaxDeterminationUsageModel();
-                            usageModel.Usage = headerRow.Cell(j).Value.ToString();
-                            usageModel.UsageId = usageList.FirstOrDefault(m => m.Usage == headerRow.Cell(j).Value.ToString()).UsageId;
-                            usageModel.TaxCodePurchase = row.Cell(j).Value.ToString();
-                            usageModel.TaxCode = row.Cell(j + 1).Value.ToString();
-                            usageModel.TaxCodeExpense = row.Cell(j + 2).Value.ToString();
-                            model.TaxUsageList.Add(usageModel);
-                        }
-
-                        TaxDeterminationModel duplicated = list.FirstOrDefault(m => m.Value1 == model.Value1 && m.Value2 == model.Value2 && m.Value3 == model.Value3 && m.Value4 == model.Value4 && m.Value5 == model.Value5);
-
-                        if (duplicated != null)
-                        {
-                            model.Error = "Valores já existentes na linha " + duplicated.Line;
-                        }
-                        list.Add(model);
                     }
+                    model.TaxUsageList = new List<TaxDeterminationUsageModel>();
+                    for (int j = 7; j < lastColumn; j += 3)
+                    {
+                        TaxDeterminationUsageModel usageModel = new TaxDeterminationUsageModel();
+                        usageModel.Usage = headerRow.Cell(j).Value.ToString();
+                        usageModel.UsageId = usageList.FirstOrDefault(m => m.Usage == headerRow.Cell(j).Value.ToString()).UsageId;
+                        usageModel.TaxCodePurchase = row.Cell(j).Value.ToString();
+                        usageModel.TaxCode = row.Cell(j + 1).Value.ToString();
+                        usageModel.TaxCodeExpense = row.Cell(j + 2).Value.ToString();
+                        model.TaxUsageList.Add(usageModel);
+                    }
+
+                    TaxDeterminationModel duplicated = list.FirstOrDefault(m => m.Value1 == model.Value1 && m.Value2 == model.Value2 && m.Value3 == model.Value3 && m.Value4 == model.Value4);
+
+                    if (duplicated != null)
+                    {
+                        model.Error = "Valores já existentes na linha " + duplicated.Line;
+                    }
+                    list.Add(model);
                 }
-                catch (Exception ex)
-                {
-                    throw new Exception("Erro ao ler arquivo: " + ex.Message);
-                }
-                finally
-                {
-                    pgb.Stop();
-                    Marshal.ReleaseComObject(pgb);
-                    pgb = null;
-                }
-            } // using wb
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao ler arquivo: " + ex.Message);
+            }
+            finally
+            {
+                pgb.Stop();
+                Marshal.ReleaseComObject(pgb);
+                pgb = null;
+            }
             return list;
         }
 
@@ -579,39 +571,37 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
             TaxKeyFieldTypeEnum fieldType2 = (TaxKeyFieldTypeEnum)keyField.KeyField2;
             TaxKeyFieldTypeEnum fieldType3 = (TaxKeyFieldTypeEnum)keyField.KeyField3;
             TaxKeyFieldTypeEnum fieldType4 = (TaxKeyFieldTypeEnum)keyField.KeyField4;
-            TaxKeyFieldTypeEnum fieldType5 = (TaxKeyFieldTypeEnum)keyField.KeyField5;
 
             switch (fieldType1)
             {
                 case TaxKeyFieldTypeEnum.NcmCode:
                     foreach (var item in list)
                     {
-                        var ncm = NcmList?.FirstOrDefault(m => m.Code == item.Value1);
-                        if (ncm != null) item.Value1 = ncm.Id.ToString();
+                        if (NcmList != null)
+                        {
+                            item.Value1 = NcmList.FirstOrDefault(m => m.Code == item.Value1).Id.ToString();
+                        }
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.ItemGroup:
                     foreach (var item in list)
                     {
-                        var ig = ItemGroupList?.FirstOrDefault(m => m.Code == item.Value1);
-                        if (ig != null) item.Value1 = ig.Id.ToString();
+                        item.Value1 = ItemGroupList.FirstOrDefault(m => m.Code == item.Value1).Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.CustomerGroup:
                     foreach (var item in list)
                     {
-                        var cg = CustomerGroupList?.FirstOrDefault(m => m.Code == item.Value1);
-                        if (cg != null) item.Value1 = cg.Id.ToString();
+                        item.Value1 = CustomerGroupList.FirstOrDefault(m => m.Code == item.Value1).Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.SupplierGroup:
                     foreach (var item in list)
                     {
-                        var sg = SupplierGroupList?.FirstOrDefault(m => m.Code == item.Value1);
-                        if (sg != null) item.Value1 = sg.Id.ToString();
+                        item.Value1 = SupplierGroupList.FirstOrDefault(m => m.Code == item.Value1).Id.ToString();
                     }
                     break;
             }
@@ -621,32 +611,28 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 case TaxKeyFieldTypeEnum.NcmCode:
                     foreach (var item in list)
                     {
-                        var ncm = NcmList?.FirstOrDefault(m => m.Code == item.Value2);
-                        if (ncm != null) item.Value2 = ncm.Id.ToString();
+                        item.Value2 = NcmList.FirstOrDefault(m => m.Code == item.Value2).Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.ItemGroup:
                     foreach (var item in list)
                     {
-                        var ig = ItemGroupList?.FirstOrDefault(m => m.Code == item.Value2);
-                        if (ig != null) item.Value2 = ig.Id.ToString();
+                        item.Value2 = ItemGroupList.FirstOrDefault(m => m.Code == item.Value2).Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.CustomerGroup:
                     foreach (var item in list)
                     {
-                        var cg = CustomerGroupList?.FirstOrDefault(m => m.Code == item.Value2);
-                        if (cg != null) item.Value2 = cg.Id.ToString();
+                        item.Value2 = CustomerGroupList.FirstOrDefault(m => m.Code == item.Value2).Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.SupplierGroup:
                     foreach (var item in list)
                     {
-                        var sg = SupplierGroupList?.FirstOrDefault(m => m.Code == item.Value2);
-                        if (sg != null) item.Value2 = sg.Id.ToString();
+                        item.Value2 = SupplierGroupList.FirstOrDefault(m => m.Code == item.Value2).Id.ToString();
                     }
                     break;
             }
@@ -656,32 +642,28 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 case TaxKeyFieldTypeEnum.NcmCode:
                     foreach (var item in list)
                     {
-                        var ncm = NcmList?.FirstOrDefault(m => m.Code == item.Value3);
-                        if (ncm != null) item.Value3 = ncm.Id.ToString();
+                        item.Value3 = NcmList.FirstOrDefault(m => m.Code == item.Value3).Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.ItemGroup:
                     foreach (var item in list)
                     {
-                        var ig = ItemGroupList?.FirstOrDefault(m => m.Code == item.Value3);
-                        if (ig != null) item.Value3 = ig.Id.ToString();
+                        item.Value3 = ItemGroupList.FirstOrDefault(m => m.Code == item.Value3).Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.CustomerGroup:
                     foreach (var item in list)
                     {
-                        var cg = CustomerGroupList?.FirstOrDefault(m => m.Code == item.Value3);
-                        if (cg != null) item.Value3 = cg.Id.ToString();
+                        item.Value3 = CustomerGroupList.FirstOrDefault(m => m.Code == item.Value3).Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.SupplierGroup:
                     foreach (var item in list)
                     {
-                        var sg = SupplierGroupList?.FirstOrDefault(m => m.Code == item.Value3);
-                        if (sg != null) item.Value3 = sg.Id.ToString();
+                        item.Value3 = SupplierGroupList.FirstOrDefault(m => m.Code == item.Value3).Id.ToString();
                     }
                     break;
             }
@@ -691,67 +673,28 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 case TaxKeyFieldTypeEnum.NcmCode:
                     foreach (var item in list)
                     {
-                        var ncm = NcmList?.FirstOrDefault(m => m.Code == item.Value4);
-                        if (ncm != null) item.Value4 = ncm.Id.ToString();
+                        item.Value4 = NcmList.FirstOrDefault(m => m.Code == item.Value4).Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.ItemGroup:
                     foreach (var item in list)
                     {
-                        var ig = ItemGroupList?.FirstOrDefault(m => m.Code == item.Value4);
-                        if (ig != null) item.Value4 = ig.Id.ToString();
+                        item.Value4 = ItemGroupList.FirstOrDefault(m => m.Code == item.Value4).Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.CustomerGroup:
                     foreach (var item in list)
                     {
-                        var cg = CustomerGroupList?.FirstOrDefault(m => m.Code == item.Value4);
-                        if (cg != null) item.Value4 = cg.Id.ToString();
+                        item.Value4 = CustomerGroupList.FirstOrDefault(m => m.Code == item.Value4).Id.ToString();
                     }
                     break;
 
                 case TaxKeyFieldTypeEnum.SupplierGroup:
                     foreach (var item in list)
                     {
-                        var sg = SupplierGroupList?.FirstOrDefault(m => m.Code == item.Value4);
-                        if (sg != null) item.Value4 = sg.Id.ToString();
-                    }
-                    break;
-            }
-
-            switch (fieldType5)
-            {
-                case TaxKeyFieldTypeEnum.NcmCode:
-                    foreach (var item in list)
-                    {
-                        var ncm = NcmList?.FirstOrDefault(m => m.Code == item.Value5);
-                        if (ncm != null) item.Value5 = ncm.Id.ToString();
-                    }
-                    break;
-
-                case TaxKeyFieldTypeEnum.ItemGroup:
-                    foreach (var item in list)
-                    {
-                        var ig = ItemGroupList?.FirstOrDefault(m => m.Code == item.Value5);
-                        if (ig != null) item.Value5 = ig.Id.ToString();
-                    }
-                    break;
-
-                case TaxKeyFieldTypeEnum.CustomerGroup:
-                    foreach (var item in list)
-                    {
-                        var cg = CustomerGroupList?.FirstOrDefault(m => m.Code == item.Value5);
-                        if (cg != null) item.Value5 = cg.Id.ToString();
-                    }
-                    break;
-
-                case TaxKeyFieldTypeEnum.SupplierGroup:
-                    foreach (var item in list)
-                    {
-                        var sg = SupplierGroupList?.FirstOrDefault(m => m.Code == item.Value5);
-                        if (sg != null) item.Value5 = sg.Id.ToString();
+                        item.Value4 = SupplierGroupList.FirstOrDefault(m => m.Code == item.Value4).Id.ToString();
                     }
                     break;
             }
@@ -765,17 +708,22 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
 
         public List<TaxDeterminationModel> ValidateList(List<TaxDeterminationModel> list, TaxCodeDeterminationTCDKeyField keyField)
         {
-            List<TaxDeterminationModel> errorList = ValidateTax(list);
+            List<TaxDeterminationModel> errorList = new List<TaxDeterminationModel>();
+
+            errorList = ValidateTax(list);
+            if (errorList.Any(m => !String.IsNullOrEmpty(m.Error)))
+            {
+                errorList.AddRange(list.Where(m => !String.IsNullOrEmpty(m.Error)));
+            }
 
             TaxKeyFieldTypeEnum fieldType1 = (TaxKeyFieldTypeEnum)keyField.KeyField1;
             TaxKeyFieldTypeEnum fieldType2 = (TaxKeyFieldTypeEnum)keyField.KeyField2;
             TaxKeyFieldTypeEnum fieldType3 = (TaxKeyFieldTypeEnum)keyField.KeyField3;
             TaxKeyFieldTypeEnum fieldType4 = (TaxKeyFieldTypeEnum)keyField.KeyField4;
-            TaxKeyFieldTypeEnum fieldType5 = (TaxKeyFieldTypeEnum)keyField.KeyField5;
 
             CrudDAO dao = new CrudDAO();
 
-            if ((fieldType1 == TaxKeyFieldTypeEnum.BusinessPartner || fieldType2 == TaxKeyFieldTypeEnum.BusinessPartner || fieldType3 == TaxKeyFieldTypeEnum.BusinessPartner || fieldType4 == TaxKeyFieldTypeEnum.BusinessPartner || fieldType5 == TaxKeyFieldTypeEnum.BusinessPartner))
+            if ((fieldType1 == TaxKeyFieldTypeEnum.BusinessPartner || fieldType2 == TaxKeyFieldTypeEnum.BusinessPartner || fieldType3 == TaxKeyFieldTypeEnum.BusinessPartner || fieldType4 == TaxKeyFieldTypeEnum.BusinessPartner))
             {
                 List<string> bpValues = new List<string>();
                 if (fieldType1 == TaxKeyFieldTypeEnum.BusinessPartner)
@@ -794,10 +742,6 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 {
                     bpValues = list.Select(m => m.Value4).Distinct().ToList();
                 }
-                if (fieldType5 == TaxKeyFieldTypeEnum.BusinessPartner)
-                {
-                    bpValues = list.Select(m => m.Value5).Distinct().ToList();
-                }
 
                 BusinesPartnerList = new List<string>();
                 foreach (var bp in bpValues)
@@ -806,7 +750,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 }
             }
 
-            if (ItemList == null && (fieldType1 == TaxKeyFieldTypeEnum.Item || fieldType2 == TaxKeyFieldTypeEnum.Item || fieldType3 == TaxKeyFieldTypeEnum.Item || fieldType4 == TaxKeyFieldTypeEnum.Item || fieldType5 == TaxKeyFieldTypeEnum.Item))
+            if (ItemList == null && (fieldType1 == TaxKeyFieldTypeEnum.Item || fieldType2 == TaxKeyFieldTypeEnum.Item || fieldType3 == TaxKeyFieldTypeEnum.Item || fieldType4 == TaxKeyFieldTypeEnum.Item))
             {
                 List<string> itemValues = new List<string>();
                 if (fieldType1 == TaxKeyFieldTypeEnum.Item)
@@ -825,10 +769,6 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 {
                     itemValues = list.Select(m => m.Value4).Distinct().ToList();
                 }
-                if (fieldType5 == TaxKeyFieldTypeEnum.Item)
-                {
-                    itemValues = list.Select(m => m.Value5).Distinct().ToList();
-                }
 
                 ItemList = new List<string>();
                 foreach (var item in itemValues)
@@ -836,11 +776,11 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                     ItemList.Add(CrudDAO.ExecuteScalar(String.Format(Scripts.Resource.GetString("Item_Get"), item)).ToString());
                 }
             }
-            if (MaterialList == null && (fieldType1 == TaxKeyFieldTypeEnum.MaterialGroup || fieldType2 == TaxKeyFieldTypeEnum.MaterialGroup || fieldType3 == TaxKeyFieldTypeEnum.MaterialGroup || fieldType4 == TaxKeyFieldTypeEnum.MaterialGroup || fieldType5 == TaxKeyFieldTypeEnum.MaterialGroup))
+            if (MaterialList == null && (fieldType1 == TaxKeyFieldTypeEnum.MaterialGroup || fieldType2 == TaxKeyFieldTypeEnum.MaterialGroup || fieldType3 == TaxKeyFieldTypeEnum.MaterialGroup || fieldType4 == TaxKeyFieldTypeEnum.MaterialGroup))
             {
                 MaterialList = dao.FillStringList(Scripts.Resource.GetString("MaterialGroup_Get"));
             }
-            if (fieldType1 == TaxKeyFieldTypeEnum.NcmCode || fieldType2 == TaxKeyFieldTypeEnum.NcmCode || fieldType3 == TaxKeyFieldTypeEnum.NcmCode || fieldType4 == TaxKeyFieldTypeEnum.NcmCode || fieldType5 == TaxKeyFieldTypeEnum.NcmCode)
+            if (fieldType1 == TaxKeyFieldTypeEnum.NcmCode || fieldType2 == TaxKeyFieldTypeEnum.NcmCode || fieldType3 == TaxKeyFieldTypeEnum.NcmCode || fieldType4 == TaxKeyFieldTypeEnum.NcmCode)
             {
                 List<string> ncmValues = new List<string>();
                 if (fieldType1 == TaxKeyFieldTypeEnum.NcmCode)
@@ -859,10 +799,6 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 {
                     ncmValues = list.Select(m => m.Value4).Distinct().ToList();
                 }
-                if (fieldType5 == TaxKeyFieldTypeEnum.NcmCode)
-                {
-                    ncmValues = list.Select(m => m.Value5).Distinct().ToList();
-                }
 
                 NcmList = new List<ValidatorModel>();
                 foreach (var ncm in ncmValues)
@@ -870,23 +806,23 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                     NcmList.Add(dao.FillModelFromSql<ValidatorModel>(String.Format(Scripts.Resource.GetString("Ncm_GetByCode"), ncm)));
                 }
             }
-            if (StateList == null && (fieldType1 == TaxKeyFieldTypeEnum.State || fieldType2 == TaxKeyFieldTypeEnum.State || fieldType3 == TaxKeyFieldTypeEnum.State || fieldType4 == TaxKeyFieldTypeEnum.State || fieldType5 == TaxKeyFieldTypeEnum.State))
+            if (StateList == null && (fieldType1 == TaxKeyFieldTypeEnum.State || fieldType2 == TaxKeyFieldTypeEnum.State || fieldType3 == TaxKeyFieldTypeEnum.State || fieldType4 == TaxKeyFieldTypeEnum.State))
             {
                 StateList = dao.FillStringList(Scripts.Resource.GetString("State_Get"));
             }
-            if (ItemGroupList == null && (fieldType1 == TaxKeyFieldTypeEnum.ItemGroup || fieldType2 == TaxKeyFieldTypeEnum.ItemGroup || fieldType3 == TaxKeyFieldTypeEnum.ItemGroup || fieldType4 == TaxKeyFieldTypeEnum.ItemGroup || fieldType5 == TaxKeyFieldTypeEnum.ItemGroup))
+            if (ItemGroupList == null && (fieldType1 == TaxKeyFieldTypeEnum.ItemGroup || fieldType2 == TaxKeyFieldTypeEnum.ItemGroup || fieldType3 == TaxKeyFieldTypeEnum.ItemGroup || fieldType4 == TaxKeyFieldTypeEnum.ItemGroup))
             {
                 ItemGroupList = dao.FillModelListFromSql<ValidatorModel>(Scripts.Resource.GetString("ItemGroup_Get"));
             }
-            if (CustomerGroupList == null && (fieldType1 == TaxKeyFieldTypeEnum.CustomerGroup || fieldType2 == TaxKeyFieldTypeEnum.CustomerGroup || fieldType3 == TaxKeyFieldTypeEnum.CustomerGroup || fieldType4 == TaxKeyFieldTypeEnum.CustomerGroup || fieldType5 == TaxKeyFieldTypeEnum.CustomerGroup))
+            if (CustomerGroupList == null && (fieldType1 == TaxKeyFieldTypeEnum.CustomerGroup || fieldType2 == TaxKeyFieldTypeEnum.CustomerGroup || fieldType3 == TaxKeyFieldTypeEnum.CustomerGroup || fieldType4 == TaxKeyFieldTypeEnum.CustomerGroup))
             {
                 CustomerGroupList = dao.FillModelListFromSql<ValidatorModel>(Scripts.Resource.GetString("CustomerGroup_Get"));
             }
-            if (SupplierGroupList == null && (fieldType1 == TaxKeyFieldTypeEnum.SupplierGroup || fieldType2 == TaxKeyFieldTypeEnum.SupplierGroup || fieldType3 == TaxKeyFieldTypeEnum.SupplierGroup || fieldType4 == TaxKeyFieldTypeEnum.SupplierGroup || fieldType5 == TaxKeyFieldTypeEnum.SupplierGroup))
+            if (SupplierGroupList == null && (fieldType1 == TaxKeyFieldTypeEnum.SupplierGroup || fieldType2 == TaxKeyFieldTypeEnum.SupplierGroup || fieldType3 == TaxKeyFieldTypeEnum.SupplierGroup || fieldType4 == TaxKeyFieldTypeEnum.SupplierGroup))
             {
                 SupplierGroupList = dao.FillModelListFromSql<ValidatorModel>(Scripts.Resource.GetString("SupplierGroup_Get"));
             }
-            if (BranchList == null && (fieldType1 == TaxKeyFieldTypeEnum.Branch || fieldType2 == TaxKeyFieldTypeEnum.Branch || fieldType3 == TaxKeyFieldTypeEnum.Branch || fieldType4 == TaxKeyFieldTypeEnum.Branch || fieldType5 == TaxKeyFieldTypeEnum.Branch))
+            if (BranchList == null && (fieldType1 == TaxKeyFieldTypeEnum.Branch || fieldType2 == TaxKeyFieldTypeEnum.Branch || fieldType3 == TaxKeyFieldTypeEnum.Branch || fieldType4 == TaxKeyFieldTypeEnum.Branch))
             {
                 BranchList = dao.FillStringList(Scripts.Resource.GetString("Branch_Get"));
             }
@@ -919,14 +855,6 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                 List<TaxDeterminationModel> value4List = list.Where(m => notFound.Contains(m.Value4)).ToList();
                 value4List.ForEach(m => m.Error += $" {fieldType4.ToString()}: Valor4 ({m.Value4}) não encontrado!");
                 errorList.AddRange(value4List);
-            }
-
-            notFound = Validate(list.Select(m => m.Value5).Where(m => !String.IsNullOrEmpty(m)).ToList(), fieldType5, keyField.UDFTable5, keyField.UDFAlias5);
-            if (notFound.Count > 0)
-            {
-                List<TaxDeterminationModel> value5List = list.Where(m => notFound.Contains(m.Value5)).ToList();
-                value5List.ForEach(m => m.Error += $" {fieldType5.ToString()}: Valor5 ({m.Value5}) não encontrado!");
-                errorList.AddRange(value5List);
             }
 
             return errorList;
@@ -967,7 +895,7 @@ namespace SPS.TaxDeterminationImporter.Core.BLL
                     {
                         TaxDeterminationModel errorModel = new TaxDeterminationModel();
                         errorModel.Line = model.Line;
-                        errorModel.Error += $" {tax.TaxCodePurchase} - Código de imposto sobre compra não encontrado!";
+                        errorModel.Error += $" {tax.TaxCodeExpense} - Código de imposto sobre compra não encontrado!";
                         errorList.Add(errorModel);
                     }
                 }

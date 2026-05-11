@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<!-- 
+  <!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,96 +59,96 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="metadata">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" />
-							</xsd:sequence>
-							<xsd:attribute name="name" use="required" type="xsd:string" />
-							<xsd:attribute name="type" type="xsd:string" />
-							<xsd:attribute name="mimetype" type="xsd:string" />
-							<xsd:attribute ref="xml:space" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="assembly">
-						<xsd:complexType>
-							<xsd:attribute name="alias" type="xsd:string" />
-							<xsd:attribute name="name" type="xsd:string" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-							<xsd:attribute ref="xml:space" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>2.0</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<data name="Branch_Get" xml:space="preserve">
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Branch_Get" xml:space="preserve">
     <value>SELECT "BPLId" FROM OBPL</value>
   </data>
-	<data name="BusinessPartner_Get" xml:space="preserve">
+  <data name="BusinessPartner_Get" xml:space="preserve">
     <value>SELECT "CardCode" FROM OCRD WHERE "CardCode" = '{0}'</value>
   </data>
-	<data name="CustomerGroup_Get" xml:space="preserve">
+  <data name="CustomerGroup_Get" xml:space="preserve">
     <value>SELECT "GroupCode" "Id", "GroupName" "Code" FROM OCRG WHERE "GroupType" = 'C'</value>
   </data>
-	<data name="ItemGroup_Get" xml:space="preserve">
+  <data name="ItemGroup_Get" xml:space="preserve">
     <value>SELECT "ItmsGrpCod" "Id", "ItmsGrpNam" "Code" FROM OITB</value>
   </data>
-	<data name="Item_Get" xml:space="preserve">
+  <data name="Item_Get" xml:space="preserve">
     <value>SELECT "ItemCode" FROM OITM WHERE "ItemCode" = '{0}'</value>
   </data>
-	<data name="MaterialGroup_Get" xml:space="preserve">
+  <data name="MaterialGroup_Get" xml:space="preserve">
     <value>SELECT "MatGrp" FROM OMGP</value>
   </data>
-	<data name="Ncm_Get" xml:space="preserve">
+  <data name="Ncm_Get" xml:space="preserve">
     <value>SELECT "AbsEntry" "Id", "NcmCode" "Code" FROM ONCM</value>
   </data>
-	<data name="Ncm_GetByCode" xml:space="preserve">
+  <data name="Ncm_GetByCode" xml:space="preserve">
     <value>SELECT "AbsEntry" "Id", "NcmCode" "Code" FROM ONCM WHERE "NcmCode" = '{0}'</value>
   </data>
-	<data name="State_Get" xml:space="preserve">
+  <data name="State_Get" xml:space="preserve">
     <value>SELECT "Code" FROM OCST</value>
   </data>
-	<data name="SupplierGroup_Get" xml:space="preserve">
+  <data name="SupplierGroup_Get" xml:space="preserve">
     <value>SELECT "GroupCode" "Id", "GroupName" "Code" FROM OCRG WHERE "GroupType" = 'S'</value>
   </data>
-	<data name="TaxDeterminationUsage_GetToExport" xml:space="preserve">
-    <value>SELECT TCD3."Tcd2Id", OUSG."Usage", TCD5."TaxCode", TCD5."ExpTaxCode" "TaxCodeExpense", TCD5."PurTaxCode" "TaxCodePurchase"
+  <data name="TaxDeterminationUsage_GetToExport" xml:space="preserve">
+    <value>SELECT TCD3."Tcd2Id", OUSG."Usage", TCD5."TaxCode", TCD5."ExpTaxCode" "TaxCodeExpense"
 FROM TCD1
 	INNER JOIN TCD2
 		ON TCD2."Tcd1Id" = TCD1."AbsId"
@@ -161,14 +161,13 @@ FROM TCD1
 WHERE TCD1."TcdId" = 1
 AND TCD1."Priority" = {0}</value>
   </data>
-	<data name="TaxDeterminationValues_GetToExport" xml:space="preserve">
+  <data name="TaxDeterminationValues_GetToExport" xml:space="preserve">
     <value>SELECT
 	TCD2."AbsId" "Tcd2Id",
 	FN_TAXCODE_EXPORT(TCD1."KeyFld_1", TCD2."KeyFld_1_V") "Value1",
 	FN_TAXCODE_EXPORT(TCD1."KeyFld_2", TCD2."KeyFld_2_V") "Value2",
 	FN_TAXCODE_EXPORT(TCD1."KeyFld_3", TCD2."KeyFld_3_V") "Value3",
 	FN_TAXCODE_EXPORT(TCD1."KeyFld_4", TCD2."KeyFld_4_V") "Value4",
-	FN_TAXCODE_EXPORT(TCD1."KeyFld_5", TCD2."KeyFld_5_V") "Value5",
 	TCD3."EfctFrom" "DateFrom",
 	TCD3."EfctTo"	"DateTo"
 FROM TCD1
@@ -179,51 +178,46 @@ FROM TCD1
 WHERE TCD1."TcdId" = 1
 AND TCD1."Priority" = {0}</value>
   </data>
-	<data name="TaxDetermination_GetByPriority" xml:space="preserve">
+  <data name="TaxDetermination_GetByPriority" xml:space="preserve">
     <value>SELECT "AbsId" FROM TCD1 WHERE "Priority" = {0}</value>
   </data>
-	<data name="TaxDetermination_GetDisplayOrder" xml:space="preserve">
+  <data name="TaxDetermination_GetDisplayOrder" xml:space="preserve">
     <value>SELECT "DispOrder" FROM TCD2
-WHERE "Tcd1Id" = {0}
-AND "KeyFld_1_V" = '{1}'
-AND IFNULL("KeyFld_2_V", '') = '{2}'
-AND IFNULL("KeyFld_3_V", '') = '{3}'
-AND IFNULL("KeyFld_4_V", '') = '{4}'
-AND IFNULL("KeyFld_5_V", '') = '{5}'</value>
+WHERE "KeyFld_1_V" = '{0}'
+AND IFNULL("KeyFld_2_V", '') = '{1}'
+AND IFNULL("KeyFld_3_V", '') = '{2}'
+AND IFNULL("KeyFld_4_V", '') = '{3}'</value>
   </data>
-	<data name="TaxDetermination_GetFields" xml:space="preserve">
+  <data name="TaxDetermination_GetFields" xml:space="preserve">
     <value>SELECT
 	'Y'	"#",
 	FN_GET_KEYFIELDDESCRIPTION(TCD1."KeyFld_1", TCD2."KeyFld_1_V") "{1}",
 	FN_GET_KEYFIELDDESCRIPTION(TCD1."KeyFld_2", TCD2."KeyFld_2_V") "{2}",
 	FN_GET_KEYFIELDDESCRIPTION(TCD1."KeyFld_3", TCD2."KeyFld_3_V") "{3}",
-	FN_GET_KEYFIELDDESCRIPTION(TCD1."KeyFld_4", TCD2."KeyFld_4_V") "{4}",
-	FN_GET_KEYFIELDDESCRIPTION(TCD1."KeyFld_5", TCD2."KeyFld_5_V") "{5}"
+	FN_GET_KEYFIELDDESCRIPTION(TCD1."KeyFld_4", TCD2."KeyFld_4_V") "{4}"
 FROM TCD1
 	INNER JOIN TCD2
 		ON TCD2."Tcd1Id" = TCD1."AbsId"
 WHERE TCD1."TcdId" = 1
-AND TCD1."Priority" = {0}
-ORDER BY TCD2."DispOrder"</value>
+AND TCD1."Priority" = {0}</value>
   </data>
-	<data name="TaxDetermination_GetKeyValues" xml:space="preserve">
-    <value>SELECT
-	"DispOrder" "DisplayOrder",
-	"KeyFld_1_V" "Value1",
+  <data name="TaxDetermination_GetKeyValues" xml:space="preserve">
+    <value>SELECT 
+	"DispOrder" "DisplayOrder", 
+	"KeyFld_1_V" "Value1", 
 	IFNULL("KeyFld_2_V", '') "Value2",
 	IFNULL("KeyFld_3_V", '') "Value3",
-	IFNULL("KeyFld_4_V", '') "Value4",
-	IFNULL("KeyFld_5_V", '') "Value5"
+	IFNULL("KeyFld_4_V", '') "Value4"
 FROM TCD2
 WHERE "Tcd1Id" = {0}</value>
   </data>
-	<data name="TaxDetermination_GetMaxDisplayOrder" xml:space="preserve">
+  <data name="TaxDetermination_GetMaxDisplayOrder" xml:space="preserve">
     <value>SELECT MAX("DispOrder") FROM TCD2 WHERE "Tcd1Id" = {0}</value>
   </data>
-	<data name="Tax_Get" xml:space="preserve">
+  <data name="Tax_Get" xml:space="preserve">
     <value>SELECT "Code" FROM OSTC</value>
   </data>
-	<data name="UDF_GetValidValues" xml:space="preserve">
+  <data name="UDF_GetValidValues" xml:space="preserve">
     <value>SELECT UFD1."FldValue" 
 FROM CUFD
     INNER JOIN UFD1 
@@ -232,7 +226,7 @@ FROM CUFD
  WHERE CUFD."TableID" = '{0}'
  AND CUFD."AliasID" = '{1}'</value>
   </data>
-	<data name="Usage_GetIdByDescription" xml:space="preserve">
+  <data name="Usage_GetIdByDescription" xml:space="preserve">
     <value>SELECT ID FROM OUSG WHERE LOWER("Usage") = '{0}' OR LOWER("Descr") = '{0}'</value>
   </data>
 </root>

@@ -8,11 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SPS.TaxDeterminationImporter.Core.DAO
-{
+namespace SPS.TaxDeterminationImporter.Core.DAO {
     using System;
-
-
+    
+    
     /// <summary>
     ///   Uma classe de recurso de tipo de alta segurança, para pesquisar cadeias de caracteres localizadas etc.
     /// </summary>
@@ -23,184 +22,152 @@ namespace SPS.TaxDeterminationImporter.Core.DAO
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Hana
-    {
-
+    internal class Hana {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Hana()
-        {
+        internal Hana() {
         }
-
+        
         /// <summary>
         ///   Retorna a instância de ResourceManager armazenada em cache usada por essa classe.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if (object.ReferenceEquals(resourceMan, null))
-                {
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SPS.TaxDeterminationImporter.Core.DAO.Hana", typeof(Hana).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Substitui a propriedade CurrentUICulture do thread atual para todas as
         ///   pesquisas de recursos que usam essa classe de recurso de tipo de alta segurança.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;BPLId&quot; FROM OBPL.
         /// </summary>
-        internal static string Branch_Get
-        {
-            get
-            {
+        internal static string Branch_Get {
+            get {
                 return ResourceManager.GetString("Branch_Get", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;CardCode&quot; FROM OCRD WHERE &quot;CardCode&quot; = &apos;{0}&apos;.
         /// </summary>
-        internal static string BusinessPartner_Get
-        {
-            get
-            {
+        internal static string BusinessPartner_Get {
+            get {
                 return ResourceManager.GetString("BusinessPartner_Get", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;GroupCode&quot; &quot;Id&quot;, &quot;GroupName&quot; &quot;Code&quot; FROM OCRG WHERE &quot;GroupType&quot; = &apos;C&apos;.
         /// </summary>
-        internal static string CustomerGroup_Get
-        {
-            get
-            {
+        internal static string CustomerGroup_Get {
+            get {
                 return ResourceManager.GetString("CustomerGroup_Get", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;ItemCode&quot; FROM OITM WHERE &quot;ItemCode&quot; = &apos;{0}&apos;.
         /// </summary>
-        internal static string Item_Get
-        {
-            get
-            {
+        internal static string Item_Get {
+            get {
                 return ResourceManager.GetString("Item_Get", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;ItmsGrpCod&quot; &quot;Id&quot;, &quot;ItmsGrpNam&quot; &quot;Code&quot; FROM OITB.
         /// </summary>
-        internal static string ItemGroup_Get
-        {
-            get
-            {
+        internal static string ItemGroup_Get {
+            get {
                 return ResourceManager.GetString("ItemGroup_Get", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;MatGrp&quot; FROM OMGP.
         /// </summary>
-        internal static string MaterialGroup_Get
-        {
-            get
-            {
+        internal static string MaterialGroup_Get {
+            get {
                 return ResourceManager.GetString("MaterialGroup_Get", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;AbsEntry&quot; &quot;Id&quot;, &quot;NcmCode&quot; &quot;Code&quot; FROM ONCM.
         /// </summary>
-        internal static string Ncm_Get
-        {
-            get
-            {
+        internal static string Ncm_Get {
+            get {
                 return ResourceManager.GetString("Ncm_Get", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;AbsEntry&quot; &quot;Id&quot;, &quot;NcmCode&quot; &quot;Code&quot; FROM ONCM WHERE &quot;NcmCode&quot; = &apos;{0}&apos;.
         /// </summary>
-        internal static string Ncm_GetByCode
-        {
-            get
-            {
+        internal static string Ncm_GetByCode {
+            get {
                 return ResourceManager.GetString("Ncm_GetByCode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;Code&quot; FROM OCST.
         /// </summary>
-        internal static string State_Get
-        {
-            get
-            {
+        internal static string State_Get {
+            get {
                 return ResourceManager.GetString("State_Get", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;GroupCode&quot; &quot;Id&quot;, &quot;GroupName&quot; &quot;Code&quot; FROM OCRG WHERE &quot;GroupType&quot; = &apos;S&apos;.
         /// </summary>
-        internal static string SupplierGroup_Get
-        {
-            get
-            {
+        internal static string SupplierGroup_Get {
+            get {
                 return ResourceManager.GetString("SupplierGroup_Get", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;Code&quot; FROM OSTC.
         /// </summary>
-        internal static string Tax_Get
-        {
-            get
-            {
+        internal static string Tax_Get {
+            get {
                 return ResourceManager.GetString("Tax_Get", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;AbsId&quot; FROM TCD1 WHERE &quot;Priority&quot; = {0}.
         /// </summary>
-        internal static string TaxDetermination_GetByPriority
-        {
-            get
-            {
+        internal static string TaxDetermination_GetByPriority {
+            get {
                 return ResourceManager.GetString("TaxDetermination_GetByPriority", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT &quot;DispOrder&quot; FROM TCD2
         ///WHERE &quot;KeyFld_1_V&quot; = &apos;{0}&apos;
@@ -208,14 +175,12 @@ namespace SPS.TaxDeterminationImporter.Core.DAO
         ///AND IFNULL(&quot;KeyFld_3_V&quot;, &apos;&apos;) = &apos;{2}&apos;
         ///AND IFNULL(&quot;KeyFld_4_V&quot;, &apos;&apos;) = &apos;{3}&apos;.
         /// </summary>
-        internal static string TaxDetermination_GetDisplayOrder
-        {
-            get
-            {
+        internal static string TaxDetermination_GetDisplayOrder {
+            get {
                 return ResourceManager.GetString("TaxDetermination_GetDisplayOrder", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT
         ///	&apos;Y&apos;	&quot;#&quot;,
@@ -229,14 +194,12 @@ namespace SPS.TaxDeterminationImporter.Core.DAO
         ///WHERE TCD1.&quot;TcdId&quot; = 1
         ///AND TCD1.&quot;Priority&quot; = {0}.
         /// </summary>
-        internal static string TaxDetermination_GetFields
-        {
-            get
-            {
+        internal static string TaxDetermination_GetFields {
+            get {
                 return ResourceManager.GetString("TaxDetermination_GetFields", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT 
         ///	&quot;DispOrder&quot; &quot;DisplayOrder&quot;, 
@@ -247,25 +210,21 @@ namespace SPS.TaxDeterminationImporter.Core.DAO
         ///FROM TCD2
         ///WHERE &quot;Tcd1Id&quot; = {0}.
         /// </summary>
-        internal static string TaxDetermination_GetKeyValues
-        {
-            get
-            {
+        internal static string TaxDetermination_GetKeyValues {
+            get {
                 return ResourceManager.GetString("TaxDetermination_GetKeyValues", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT MAX(&quot;DispOrder&quot;) FROM TCD2 WHERE &quot;Tcd1Id&quot; = {0}.
         /// </summary>
-        internal static string TaxDetermination_GetMaxDisplayOrder
-        {
-            get
-            {
+        internal static string TaxDetermination_GetMaxDisplayOrder {
+            get {
                 return ResourceManager.GetString("TaxDetermination_GetMaxDisplayOrder", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT TCD3.&quot;Tcd2Id&quot;, OUSG.&quot;Usage&quot;, TCD5.&quot;TaxCode&quot;, TCD5.&quot;ExpTaxCode&quot; &quot;TaxCodeExpense&quot;
         ///FROM TCD1
@@ -280,14 +239,12 @@ namespace SPS.TaxDeterminationImporter.Core.DAO
         ///WHERE TCD1.&quot;TcdId&quot; = 1
         ///AND TCD1.&quot;Priority&quot; = {0}.
         /// </summary>
-        internal static string TaxDeterminationUsage_GetToExport
-        {
-            get
-            {
+        internal static string TaxDeterminationUsage_GetToExport {
+            get {
                 return ResourceManager.GetString("TaxDeterminationUsage_GetToExport", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT
         ///	TCD2.&quot;AbsId&quot; &quot;Tcd2Id&quot;,
@@ -305,14 +262,12 @@ namespace SPS.TaxDeterminationImporter.Core.DAO
         ///WHERE TCD1.&quot;TcdId&quot; = 1
         ///AND TCD1.&quot;Priority&quot; [o restante da cadeia de caracteres foi truncado]&quot;;.
         /// </summary>
-        internal static string TaxDeterminationValues_GetToExport
-        {
-            get
-            {
+        internal static string TaxDeterminationValues_GetToExport {
+            get {
                 return ResourceManager.GetString("TaxDeterminationValues_GetToExport", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT UFD1.&quot;FldValue&quot; 
         ///FROM CUFD
@@ -322,21 +277,17 @@ namespace SPS.TaxDeterminationImporter.Core.DAO
         /// WHERE CUFD.&quot;TableID&quot; = &apos;{0}&apos;
         /// AND CUFD.&quot;AliasID&quot; = &apos;{1}&apos;.
         /// </summary>
-        internal static string UDF_GetValidValues
-        {
-            get
-            {
+        internal static string UDF_GetValidValues {
+            get {
                 return ResourceManager.GetString("UDF_GetValidValues", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT ID FROM OUSG WHERE LOWER(&quot;Usage&quot;) = &apos;{0}&apos; OR LOWER(&quot;Descr&quot;) = &apos;{0}&apos;.
         /// </summary>
-        internal static string Usage_GetIdByDescription
-        {
-            get
-            {
+        internal static string Usage_GetIdByDescription {
+            get {
                 return ResourceManager.GetString("Usage_GetIdByDescription", resourceCulture);
             }
         }

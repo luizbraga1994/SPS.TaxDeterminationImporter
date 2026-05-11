@@ -170,12 +170,10 @@ namespace SPS.TaxDeterminationImporter.Core.DAO {
         
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT DispOrder FROM TCD2
-        ///WHERE Tcd1Id = {0}
-        ///AND KeyFld_1_V = &apos;{1}&apos;
-        ///AND ISNULL(KeyFld_2_V, &apos;&apos;) = &apos;{2}&apos;
-        ///AND ISNULL(KeyFld_3_V, &apos;&apos;) = &apos;{3}&apos;
-        ///AND ISNULL(KeyFld_4_V, &apos;&apos;) = &apos;{4}&apos;
-        ///AND ISNULL(KeyFld_5_V, &apos;&apos;) = &apos;{5}&apos;.
+        ///WHERE KeyFld_1_V = &apos;{0}&apos;
+        ///AND ISNULL(KeyFld_2_V, &apos;&apos;) = &apos;{1}&apos;
+        ///AND ISNULL(KeyFld_3_V, &apos;&apos;) = &apos;{2}&apos;
+        ///AND ISNULL(KeyFld_4_V, &apos;&apos;) = &apos;{3}&apos;.
         /// </summary>
         internal static string TaxDetermination_GetDisplayOrder {
             get {
@@ -189,14 +187,12 @@ namespace SPS.TaxDeterminationImporter.Core.DAO {
         ///	[dbo].FN_GET_KEYFIELDDESCRIPTION(TCD1.KeyFld_1, TCD2.KeyFld_1_V) {1},
         ///	[dbo].FN_GET_KEYFIELDDESCRIPTION(TCD1.KeyFld_2, TCD2.KeyFld_2_V) {2},
         ///	[dbo].FN_GET_KEYFIELDDESCRIPTION(TCD1.KeyFld_3, TCD2.KeyFld_3_V) {3},
-        ///	[dbo].FN_GET_KEYFIELDDESCRIPTION(TCD1.KeyFld_4, TCD2.KeyFld_4_V) {4},
-        ///	[dbo].FN_GET_KEYFIELDDESCRIPTION(TCD1.KeyFld_5, TCD2.KeyFld_5_V) {5}
+        ///	[dbo].FN_GET_KEYFIELDDESCRIPTION(TCD1.KeyFld_4, TCD2.KeyFld_4_V) {4}
         ///FROM TCD1
         ///	INNER JOIN TCD2
         ///		ON TCD2.Tcd1Id = TCD1.AbsId
         ///WHERE TCD1.TcdId = 1
-        ///AND TCD1.Priority = {0}
-        ///ORDER BY TCD2.DispOrder.
+        ///AND TCD1.Priority = {0}.
         /// </summary>
         internal static string TaxDetermination_GetFields {
             get {
@@ -205,13 +201,12 @@ namespace SPS.TaxDeterminationImporter.Core.DAO {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT
-        ///	DispOrder DisplayOrder,
-        ///	KeyFld_1_V Value1,
+        ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT 
+        ///	DispOrder DisplayOrder, 
+        ///	KeyFld_1_V Value1, 
         ///	ISNULL(KeyFld_2_V, &apos;&apos;) Value2,
         ///	ISNULL(KeyFld_3_V, &apos;&apos;) Value3,
-        ///	ISNULL(KeyFld_4_V, &apos;&apos;) Value4,
-        ///	ISNULL(KeyFld_5_V, &apos;&apos;) Value5
+        ///	ISNULL(KeyFld_4_V, &apos;&apos;) Value4
         ///FROM TCD2
         ///WHERE Tcd1Id = {0}.
         /// </summary>
@@ -231,7 +226,7 @@ namespace SPS.TaxDeterminationImporter.Core.DAO {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT TCD3.Tcd2Id, OUSG.Usage, TCD5.TaxCode, TCD5.ExpTaxCode TaxCodeExpense, TCD5.PurTaxCode TaxCodePurchase
+        ///   Consulta uma cadeia de caracteres localizada semelhante a SELECT TCD3.Tcd2Id, OUSG.Usage, TCD5.TaxCode, TCD5.ExpTaxCode TaxCodeExpense
         ///FROM TCD1
         ///	INNER JOIN TCD2
         ///		ON TCD2.Tcd1Id = TCD1.AbsId
@@ -257,7 +252,6 @@ namespace SPS.TaxDeterminationImporter.Core.DAO {
         ///	dbo.FN_TAXCODE_EXPORT(TCD1.KeyFld_2, TCD2.KeyFld_2_V) Value2,
         ///	dbo.FN_TAXCODE_EXPORT(TCD1.KeyFld_3, TCD2.KeyFld_3_V) Value3,
         ///	dbo.FN_TAXCODE_EXPORT(TCD1.KeyFld_4, TCD2.KeyFld_4_V) Value4,
-        ///	dbo.FN_TAXCODE_EXPORT(TCD1.KeyFld_5, TCD2.KeyFld_5_V) Value5,
         ///	TCD3.EfctFrom DateFrom,
         ///	TCD3.EfctTo	DateTo
         ///FROM TCD1
@@ -265,7 +259,8 @@ namespace SPS.TaxDeterminationImporter.Core.DAO {
         ///		ON TCD2.Tcd1Id = TCD1.AbsId
         ///	INNER JOIN TCD3
         ///		ON TCD3.Tcd2Id = TCD2.AbsId
-        ///WHERE T [o restante da cadeia de caracteres foi truncado]&quot;;.
+        ///WHERE TCD1.TcdId = 1
+        ///AND TCD1.Priority = {0}.
         /// </summary>
         internal static string TaxDeterminationValues_GetToExport {
             get {

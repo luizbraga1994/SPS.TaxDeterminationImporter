@@ -78,7 +78,7 @@ namespace SPS.TaxDeterminationImporter.Core.Forms
                                         {
                                             this.Import(SelectedKey);
                                         }
-                                        else if (ItemEventInfo.ItemUID == "bt_Export")
+                                        else if(ItemEventInfo.ItemUID == "bt_Export")
                                         {
                                             this.Export(SelectedKey, ((EditText)mt_Tax.GetCellSpecific("2005", SelectedKey)).Value);
                                         }
@@ -166,15 +166,15 @@ namespace SPS.TaxDeterminationImporter.Core.Forms
         private void Remove(int selectedRow)
         {
             Matrix mt_Tax = (Matrix)Form.Items.Item("2003").Specific;
-            string field1 = ((ComboBox)mt_Tax.GetCellSpecific("2001", selectedRow)).Selected.Description;
-            string field2 = ((ComboBox)mt_Tax.GetCellSpecific("2002", selectedRow)).Selected.Description;
-            string field3 = ((ComboBox)mt_Tax.GetCellSpecific("2003", selectedRow)).Selected.Description;
-            string field4 = ((ComboBox)mt_Tax.GetCellSpecific("1320002007", selectedRow)).Selected.Description;
-            string field5 = ((ComboBox)mt_Tax.GetCellSpecific("1320002008", selectedRow)).Selected.Description;
-            string description = ((EditText)mt_Tax.GetCellSpecific("2005", selectedRow)).Value;
+            int selectedKey = mt_Tax.GetNextSelectedRow();
+            string field1 = ((ComboBox)mt_Tax.GetCellSpecific("2001", selectedKey)).Selected.Description;
+            string field2 = ((ComboBox)mt_Tax.GetCellSpecific("2002", selectedKey)).Selected.Description;
+            string field3 = ((ComboBox)mt_Tax.GetCellSpecific("2003", selectedKey)).Selected.Description;
+            string field4 = ((ComboBox)mt_Tax.GetCellSpecific("1320002007", selectedKey)).Selected.Description;
+            string description = ((EditText)mt_Tax.GetCellSpecific("2005", selectedKey)).Value;
 
             FrmRemoveTax frmRemoveTax = new FrmRemoveTax();
-            frmRemoveTax.Show(selectedRow, field1, field2, field3, field4, field5, description);
+            frmRemoveTax.Show(selectedKey, field1, field2, field3, field4, description);
         }
     }
 }

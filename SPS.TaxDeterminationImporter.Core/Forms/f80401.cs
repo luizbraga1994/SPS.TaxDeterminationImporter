@@ -78,7 +78,7 @@ namespace SPS.TaxDeterminationImporter.Core.Forms
                                         {
                                             this.Import(SelectedKey);
                                         }
-                                        else if(ItemEventInfo.ItemUID == "bt_Export")
+                                        else if (ItemEventInfo.ItemUID == "bt_Export")
                                         {
                                             this.Export(SelectedKey, ((EditText)mt_Tax.GetCellSpecific("2005", SelectedKey)).Value);
                                         }

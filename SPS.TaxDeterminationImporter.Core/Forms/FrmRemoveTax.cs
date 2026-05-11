@@ -103,7 +103,7 @@ namespace SPS.TaxDeterminationImporter.Core.Forms
             }
             Form.Freeze(false);
         }
-        
+
         private void Remove()
         {
             List<int> selectedLines = new List<int>();

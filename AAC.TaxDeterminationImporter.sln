@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.34601.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPS.TaxDeterminationImporter", "SPS.TaxDeterminationImporter\SPS.TaxDeterminationImporter.csproj", "{489D9BF8-2D0A-4A8A-98A9-7F99746BF55B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AAC.TaxDeterminationImporter", "AAC.TaxDeterminationImporter\AAC.TaxDeterminationImporter.csproj", "{489D9BF8-2D0A-4A8A-98A9-7F99746BF55B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPS.TaxDeterminationImporter.Core", "SPS.TaxDeterminationImporter.Core\SPS.TaxDeterminationImporter.Core.csproj", "{F37EEAE0-D5E1-4365-A42C-F0F2A488DA9B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AAC.TaxDeterminationImporter.Core", "AAC.TaxDeterminationImporter.Core\AAC.TaxDeterminationImporter.Core.csproj", "{F37EEAE0-D5E1-4365-A42C-F0F2A488DA9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

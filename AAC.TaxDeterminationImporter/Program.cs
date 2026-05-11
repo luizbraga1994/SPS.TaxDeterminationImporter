@@ -1,11 +1,11 @@
 ﻿using SBO.Hub;
 using SBO.Hub.Services;
-using SPS.TaxDeterminationImporter.Core.BLL;
+using AAC.TaxDeterminationImporter.Core.BLL;
 using System;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace SPS.TaxDeterminationImporter
+namespace AAC.TaxDeterminationImporter
 {
     static class Program
     {
@@ -21,7 +21,7 @@ namespace SPS.TaxDeterminationImporter
                 return;
             }
 
-            SBOApp sboApp = new SBOApp(args[0], $"{Application.StartupPath}\\SPS.TaxDeterminationImporter.Core.dll");
+            SBOApp sboApp = new SBOApp(args[0], $"{Application.StartupPath}\\AAC.TaxDeterminationImporter.Core.dll");
 
             sboApp.InitializeApplication();
 

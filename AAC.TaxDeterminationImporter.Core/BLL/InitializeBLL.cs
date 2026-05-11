@@ -1,6 +1,6 @@
-﻿using SPS.TaxDeterminationImporter.Core.DAO;
+﻿using AAC.TaxDeterminationImporter.Core.DAO;
 
-namespace SPS.TaxDeterminationImporter.Core.BLL
+namespace AAC.TaxDeterminationImporter.Core.BLL
 {
     public class InitializeBLL
     {

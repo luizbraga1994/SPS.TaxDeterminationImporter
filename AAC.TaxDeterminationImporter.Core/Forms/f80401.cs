@@ -2,12 +2,12 @@
 using SBO.Hub;
 using SBO.Hub.Forms;
 using SBO.Hub.Util;
-using SPS.TaxDeterminationImporter.Core.BLL;
-using SPS.TaxDeterminationImporter.Core.Model;
+using AAC.TaxDeterminationImporter.Core.BLL;
+using AAC.TaxDeterminationImporter.Core.Model;
 using System;
 using System.Collections.Generic;
 
-namespace SPS.TaxDeterminationImporter.Core.Forms
+namespace AAC.TaxDeterminationImporter.Core.Forms
 {
     /// <summary>
     /// Determinação de Código de Imposto

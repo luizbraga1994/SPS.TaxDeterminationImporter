@@ -1,9 +1,9 @@
 ﻿using SAPbouiCOM;
 using SBO.Hub.Forms;
-using SPS.TaxDeterminationImporter.Core.Model;
+using AAC.TaxDeterminationImporter.Core.Model;
 using System.Collections.Generic;
 
-namespace SPS.TaxDeterminationImporter.Core.Forms
+namespace AAC.TaxDeterminationImporter.Core.Forms
 {
     public class FrmImportLog : BaseForm
     {

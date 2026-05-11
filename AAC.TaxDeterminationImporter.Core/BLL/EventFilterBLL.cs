@@ -1,7 +1,7 @@
 ﻿using SAPbouiCOM;
 using SBO.Hub.Helpers;
 
-namespace SPS.TaxDeterminationImporter.Core.BLL
+namespace AAC.TaxDeterminationImporter.Core.BLL
 {
     class EventFilterBLL
     {

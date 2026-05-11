@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SPS.TaxDeterminationImporter.Core.Model
+namespace AAC.TaxDeterminationImporter.Core.Model
 {
     public class TaxDeterminationModel
     {

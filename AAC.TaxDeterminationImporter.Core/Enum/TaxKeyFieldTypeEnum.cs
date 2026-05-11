@@ -1,4 +1,4 @@
-﻿namespace SPS.TaxDeterminationImporter.Core.Enum
+﻿namespace AAC.TaxDeterminationImporter.Core.Enum
 {
     public enum TaxKeyFieldTypeEnum
     {

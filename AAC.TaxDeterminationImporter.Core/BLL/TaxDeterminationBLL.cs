@@ -3,9 +3,9 @@ using SAPbobsCOM;
 using SAPbouiCOM;
 using SBO.Hub;
 using SBO.Hub.DAO;
-using SPS.TaxDeterminationImporter.Core.DAO;
-using SPS.TaxDeterminationImporter.Core.Enum;
-using SPS.TaxDeterminationImporter.Core.Model;
+using AAC.TaxDeterminationImporter.Core.DAO;
+using AAC.TaxDeterminationImporter.Core.Enum;
+using AAC.TaxDeterminationImporter.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,7 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace SPS.TaxDeterminationImporter.Core.BLL
+namespace AAC.TaxDeterminationImporter.Core.BLL
 {
     public class TaxDeterminationBLL
     {

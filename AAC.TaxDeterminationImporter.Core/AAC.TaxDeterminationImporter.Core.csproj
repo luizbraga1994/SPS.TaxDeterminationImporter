@@ -7,8 +7,8 @@
     <ProjectGuid>{F37EEAE0-D5E1-4365-A42C-F0F2A488DA9B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SPS.TaxDeterminationImporter.Core</RootNamespace>
-    <AssemblyName>SPS.TaxDeterminationImporter.Core</AssemblyName>
+    <RootNamespace>AAC.TaxDeterminationImporter.Core</RootNamespace>
+    <AssemblyName>AAC.TaxDeterminationImporter.Core</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

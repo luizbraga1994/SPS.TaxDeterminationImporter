@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SPS.TaxDeterminationImporter.Core")]
+[assembly: AssemblyTitle("AAC.TaxDeterminationImporter")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SPS.TaxDeterminationImporter.Core")]
+[assembly: AssemblyProduct("AAC.TaxDeterminationImporter")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f37eeae0-d5e1-4365-a42c-f0f2a488da9b")]
+[assembly: Guid("489d9bf8-2d0a-4a8a-98a9-7f99746bf55b")]
 
 // Version information for an assembly consists of the following four values:
 //

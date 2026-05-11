@@ -1,7 +1,7 @@
 ﻿using SBO.Hub;
 using System.Resources;
 
-namespace SPS.TaxDeterminationImporter.Core.DAO
+namespace AAC.TaxDeterminationImporter.Core.DAO
 {
     public class Scripts
     {
@@ -11,11 +11,11 @@ namespace SPS.TaxDeterminationImporter.Core.DAO
         {
             if (SBOApp.Company.DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB)
             {
-                Resource = new ResourceManager("SPS.TaxDeterminationImporter.Core.DAO.Hana", typeof(Hana).Assembly);
+                Resource = new ResourceManager("AAC.TaxDeterminationImporter.Core.DAO.Hana", typeof(Hana).Assembly);
             }
             else
             {
-                Resource = new ResourceManager("SPS.TaxDeterminationImporter.Core.DAO.SQL", typeof(SQL).Assembly);
+                Resource = new ResourceManager("AAC.TaxDeterminationImporter.Core.DAO.SQL", typeof(SQL).Assembly);
             }
         }
     }

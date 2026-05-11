@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SPS.TaxDeterminationImporter.Core.DAO {
+namespace AAC.TaxDeterminationImporter.Core.DAO {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SPS.TaxDeterminationImporter.Core.DAO {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SPS.TaxDeterminationImporter.Core.DAO.SQL", typeof(SQL).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AAC.TaxDeterminationImporter.Core.DAO.SQL", typeof(SQL).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
